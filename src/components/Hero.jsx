@@ -10,6 +10,11 @@ export default function Hero() {
     <section className="hero">
       <Container className="hero__inner">
         <div className="hero__copy">
+          <img
+            className="hero__logo"
+            src="/images/Log.jpg.jpeg"
+            alt={`${company.name} logo`}
+          />
           <div className="badge">{company.licensedNote}</div>
           <h1 className="hero__title">
             Travel, visa, and study-abroad support you can trust.
