@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { NavLink, Link } from "react-router-dom";
 import Container from "./Container";
 import { company } from "../data/company";
@@ -8,6 +8,7 @@ const links = [
   { label: "Services", to: "/services" },
   { label: "Tours", to: "/tours" },
   { label: "Assessment", to: "/assessment" },
+  { label: "Blog", to: "/blog" },
   { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" }
 ];

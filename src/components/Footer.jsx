@@ -1,4 +1,4 @@
-﻿import Container from "./Container";
+import Container from "./Container";
 import { company } from "../data/company";
 import { Link } from "react-router-dom";
 
@@ -20,6 +20,7 @@ export default function Footer() {
           <a href={"mailto:" + company.email}>Email</a>
           <a href={"tel:" + company.phones[0].value}>Call</a>
           <Link to="/tours">Tours</Link>
+          <Link to="/blog">Blog</Link>
           <Link to="/assessment">Assessment</Link>
         </div>
       </Container>
