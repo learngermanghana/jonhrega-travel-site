@@ -132,6 +132,16 @@ a:hover{ text-decoration: underline; }
   gap: 1.5rem;
   align-items: start;
 }
+.hero__logo{
+  width: min(200px, 60vw);
+  height: auto;
+  margin-bottom: .75rem;
+  border-radius: 18px;
+  border: 1px solid rgba(234,240,255,.16);
+  background: rgba(15,26,48,.4);
+  box-shadow: var(--shadow);
+  padding: .35rem;
+}
 .badge{
   display: inline-flex;
   padding: .45rem .75rem;
