@@ -1,4 +1,4 @@
 ﻿User-agent: *
 Allow: /
 
-Sitemap: https://jonhregatravelandtours.com/sitemap.xml
+Sitemap: https://www.jonhregatravelandtours.com/sitemap.xml
