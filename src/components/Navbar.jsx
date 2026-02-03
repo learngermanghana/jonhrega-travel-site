@@ -21,7 +21,7 @@ export default function Navbar() {
     <header className="nav nav--scrolled">
       <Container className="nav__inner">
         <Link className="brand" to="/" onClick={() => setOpen(false)}>
-          <span className="brand__mark">JT</span>
+          <img className="brand__logo" src="/images/Log.jpg.jpeg" alt={`${company.name} logo`} />
           <span className="brand__text">
             <span className="brand__name">{company.name}</span>
             <span className="brand__sub">{company.licensedNote}</span>

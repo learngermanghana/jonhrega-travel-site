@@ -55,15 +55,15 @@ a:hover{ text-decoration: underline; }
   gap: .75rem;
   align-items: center;
 }
-.brand__mark{
-  width: 42px; height: 42px;
-  display: grid; place-items: center;
+.brand__logo{
+  width: 42px;
+  height: 42px;
+  object-fit: cover;
   border-radius: 14px;
-  background: linear-gradient(135deg, rgba(119,215,255,.22), rgba(167,255,207,.16));
   border: 1px solid rgba(234,240,255,.14);
   box-shadow: var(--shadow);
-  font-weight: 800;
-  letter-spacing: .02em;
+  background: rgba(15,26,48,.4);
+  padding: .2rem;
 }
 .brand__text{ display: grid; line-height: 1.05; }
 .brand__name{ font-weight: 800; }
