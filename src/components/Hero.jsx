@@ -12,7 +12,7 @@ export default function Hero() {
         <div className="hero__copy">
           <img
             className="hero__logo"
-            src="/images/Log.jpg.jpeg"
+            src="/images/Jonhrega%20T.T.png"
             alt={`${company.name} logo`}
           />
           <div className="badge">{company.licensedNote}</div>
