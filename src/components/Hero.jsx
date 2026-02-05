@@ -48,11 +48,6 @@ export default function Hero() {
         <div className="hero__panel">
           <div className="hero__visual">
             <img
-              className="hero__image hero__image--plane"
-              src="/images/plane.jpg"
-              alt="Airplane in flight"
-            />
-            <img
               className="hero__image hero__image--passport"
               src="/images/ghanapassport.jpg"
               alt="Ghana passport"
