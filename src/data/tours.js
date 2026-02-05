@@ -16,7 +16,64 @@ export const tours = [
       "Optional desert safari arrangement",
       "Travel documentation guidance"
     ],
-    image: "/images/dubai.jpg"
+    image: "/images/dubai.jpeg"
+  },
+  {
+    slug: "germany-cultural-getaway",
+    title: "Germany Cultural Getaway",
+    subtitle: "Berlin • Munich • Historical landmarks • Food tour",
+    destination: "Germany",
+    durationDays: 7,
+    budget: "Mid-range",
+    duration: "6–8 days",
+    dateRange: "Flexible dates",
+    priceNote: "Price: Contact for quote",
+    includes: [
+      "Hotel reservation support",
+      "City tour planning",
+      "Museum and landmark guidance",
+      "Airport transfers",
+      "Travel documentation guidance"
+    ],
+    image: "/images/germany.jpeg"
+  },
+  {
+    slug: "france-city-escape",
+    title: "France City Escape",
+    subtitle: "Paris • Museums • River cruise • Shopping",
+    destination: "France",
+    durationDays: 6,
+    budget: "Premium",
+    duration: "5–7 days",
+    dateRange: "Flexible dates",
+    priceNote: "Price: Contact for quote",
+    includes: [
+      "Hotel reservation support",
+      "City tour planning",
+      "Attraction ticket guidance",
+      "Airport transfers",
+      "Travel insurance guidance"
+    ],
+    image: "/images/france.jpeg"
+  },
+  {
+    slug: "poland-heritage-tour",
+    title: "Poland Heritage Tour",
+    subtitle: "Krakow • Warsaw • Old Town walks",
+    destination: "Poland",
+    durationDays: 5,
+    budget: "Budget-friendly",
+    duration: "4–6 days",
+    dateRange: "Flexible dates",
+    priceNote: "Price: Contact for quote",
+    includes: [
+      "Hotel booking options",
+      "City tour planning",
+      "Airport transfers",
+      "Local experience guidance",
+      "Travel documentation guidance"
+    ],
+    image: "/images/poland.jpeg"
   },
   {
     slug: "zanzibar-beach-holiday",
