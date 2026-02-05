@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import WhatsAppFloat from "./components/WhatsAppFloat";
+import Hero from "./components/Hero";
 
 import Home from "./pages/Home";
 import ServicesPage from "./pages/ServicesPage";
@@ -17,6 +18,7 @@ export default function App() {
       <Navbar />
 
       <main>
+        <Hero />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<ServicesPage />} />
