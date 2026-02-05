@@ -1,4 +1,3 @@
-import Hero from "../components/Hero";
 import HomeOffers from "../components/HomeOffers";
 import TrustBadges from "../components/TrustBadges";
 import Testimonials from "../components/Testimonials";
@@ -15,7 +14,6 @@ export default function Home() {
         description="Licensed travel support in Accra for visas, tours, study abroad, flights, and corporate travel."
         path="/"
       />
-      <Hero />
       <HomeOffers />
       <TrustBadges />
       <Testimonials />
