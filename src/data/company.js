@@ -2,7 +2,7 @@
   name: "Jonhrega Travel and Tours",
   tagline: "Visa • Study Abroad • Flights • Corporate Travel • Medical Tourism • Insurance",
   licensedNote: "Licensed by Ghana Tourism Authority",
-  licenseNumberPlaceholder: "License No.: (add your GTA license number)",
+  licenseNumberPlaceholder: "License No.: AWTT00006525",
   website: "www.jonhregatravelandtours.com",
   email: "Jonhregatravelandtours@yahoo.com",
   phones: [

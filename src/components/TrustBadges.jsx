@@ -9,7 +9,7 @@ export default function TrustBadges() {
         <div className="section__head">
           <h2>Trust & Compliance</h2>
           <p>
-            {company.name} is <strong>{company.licensedNote}</strong>. Add the official license number when ready.
+            {company.name} is <strong>{company.licensedNote}</strong> ({company.licenseNumberPlaceholder}).
           </p>
         </div>
 
