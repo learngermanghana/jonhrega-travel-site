@@ -3,7 +3,7 @@
   tagline: "Visa • Study Abroad • Flights • Corporate Travel • Medical Tourism • Insurance",
   licensedNote: "Licensed by Ghana Tourism Authority",
   licenseNumberPlaceholder: "License No.: (add your GTA license number)",
-  website: "Jonhregatravelandtours.com",
+  website: "www.jonhregatravelandtours.com",
   email: "Jonhregatravelandtours@yahoo.com",
   phones: [
     { label: "Call", value: "+233243410568", raw: "00233243410568" },

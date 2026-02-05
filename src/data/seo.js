@@ -1,5 +1,5 @@
 ﻿export const seo = {
-  baseUrl: "https://jonhregatravelandtours.com",
+  baseUrl: "https://www.jonhregatravelandtours.com",
   siteName: "Jonhrega Travel and Tours",
   defaultDescription:
     "Jonhrega Travel and Tours (Licensed by Ghana Tourism Authority) — visas, study abroad, flights, tours, corporate travel, medical tourism, and travel insurance in Accra, Ghana.",
