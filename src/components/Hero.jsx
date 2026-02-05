@@ -16,9 +16,7 @@ export default function Hero() {
             alt={`${company.name} logo`}
           />
           <div className="badge">{company.licensedNote}</div>
-          <h1 className="hero__title">
-            Travel, visa, and study-abroad support you can trust.
-          </h1>
+          <h1 className="hero__title">Visa, flight, and study abroad made easy.</h1>
           <p className="hero__text">
             {company.name} helps individuals and companies with visa processing, study abroad guidance,
             flights, corporate travel management, medical tourism planning, and travel insurance.
@@ -52,7 +50,19 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="hero__panel" aria-hidden="true">
+        <div className="hero__panel">
+          <div className="hero__visual">
+            <img
+              className="hero__image hero__image--plane"
+              src="/images/plane.jpg"
+              alt="Airplane in flight"
+            />
+            <img
+              className="hero__image hero__image--passport"
+              src="/images/ghanapassport.jpg"
+              alt="Ghana passport"
+            />
+          </div>
           <div className="panelCard">
             <div className="panelCard__title">Quick Services</div>
             <ul className="panelCard__list">
