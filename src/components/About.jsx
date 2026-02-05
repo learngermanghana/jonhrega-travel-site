@@ -16,13 +16,10 @@ export default function About() {
               Our goal is simple: help you prepare properly, reduce stress, and travel with confidence.
             </p>
 
-            <div className="callout">
-              <div className="callout__title">{company.licensedNote}</div>
-              <div className="callout__text">{company.licenseNumberPlaceholder}</div>
-              <div className="callout__hint">
-                (Add the official license number here once you have it.)
+              <div className="callout">
+                <div className="callout__title">{company.licensedNote}</div>
+                <div className="callout__text">{company.licenseNumberPlaceholder}</div>
               </div>
-            </div>
           </div>
 
           <div className="infoBox">
