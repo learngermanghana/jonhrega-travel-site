@@ -8,7 +8,7 @@ const offers = [
     description:
       "Apply for Canada student visa, Express Entry permanent residency, visitor visa or work permit with expert documentation support.",
     topic: "Canada: Student visa, Work Permit, Express Entry PR, or Visitor Visa",
-    image: "/images/canada.jpg"
+    image: "/images/canada.jpeg"
   },
   {
     title: "United Kingdom – Tourist & Student Visa",
@@ -16,7 +16,7 @@ const offers = [
     description:
       "Professional assistance for UK visitor visa, business travel, short-term study and family visit applications.",
     topic: "UK: Visitor visa, Student visa, Business travel, or Family visit",
-    image: "/images/uk.jpg"
+    image: "/images/Uk.jpeg"
   },
   {
     title: "United States – B1/B2 Visitor Visa",
@@ -24,7 +24,7 @@ const offers = [
     description:
       "Guidance for US tourist and business visa applications including DS-160 review and interview preparation.",
     topic: "USA: B1/B2 Visitor Visa (DS-160 review + Interview prep)",
-    image: "/images/usa.jpg"
+    image: "/images/usa.jpeg"
   }
 ];
 

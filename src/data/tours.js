@@ -57,6 +57,63 @@ export const tours = [
     image: "/images/france.jpeg"
   },
   {
+    slug: "belgium-cultural-weekend",
+    title: "Belgium Cultural Weekend",
+    subtitle: "Brussels • Bruges • Ghent highlights",
+    destination: "Belgium",
+    durationDays: 5,
+    budget: "Mid-range",
+    duration: "4–6 days",
+    dateRange: "Flexible dates",
+    priceNote: "Price: Contact for quote",
+    includes: [
+      "Hotel reservation support",
+      "City tour planning",
+      "Museum and landmark guidance",
+      "Airport transfers",
+      "Travel documentation guidance"
+    ],
+    image: "/images/belgium.jpeg"
+  },
+  {
+    slug: "italy-classic-escape",
+    title: "Italy Classic Escape",
+    subtitle: "Rome • Florence • Venice experiences",
+    destination: "Italy",
+    durationDays: 7,
+    budget: "Premium",
+    duration: "6–8 days",
+    dateRange: "Flexible dates",
+    priceNote: "Price: Contact for quote",
+    includes: [
+      "Hotel reservation support",
+      "City tour planning",
+      "Attraction ticket guidance",
+      "Airport transfers",
+      "Travel insurance guidance"
+    ],
+    image: "/images/italy.jpeg"
+  },
+  {
+    slug: "turkey-heritage-tour",
+    title: "Turkey Heritage Tour",
+    subtitle: "Istanbul • Cappadocia • Cultural sites",
+    destination: "Turkey",
+    durationDays: 7,
+    budget: "Mid-range",
+    duration: "6–8 days",
+    dateRange: "Flexible dates",
+    priceNote: "Price: Contact for quote",
+    includes: [
+      "Hotel reservation support",
+      "City tour planning",
+      "Airport transfers",
+      "Tour itinerary planning",
+      "Travel documentation guidance"
+    ],
+    image: "/images/turkey.jpeg"
+  },
+  {
     slug: "poland-heritage-tour",
     title: "Poland Heritage Tour",
     subtitle: "Krakow • Warsaw • Old Town walks",
@@ -116,7 +173,7 @@ export const tours = [
   {
     slug: "south-africa-tour",
     title: "South Africa Tour",
-    subtitle: "Cape Town • Attractions • Optional wine tour",
+    subtitle: "Cape Town • Attractions",
     destination: "South Africa",
     durationDays: 7,
     budget: "Mid-range",
