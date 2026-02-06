@@ -134,7 +134,7 @@ a:hover{ text-decoration: underline; }
   inset: 0;
   background:
     linear-gradient(90deg, rgba(245,249,255,.88) 0%, rgba(245,249,255,.62) 55%, rgba(245,249,255,.25) 100%),
-    url("/images/plane.jpeg") center/contain no-repeat;
+    url("/images/plane.jpeg") center/cover no-repeat;
   z-index: 0;
 }
 .hero__inner{
