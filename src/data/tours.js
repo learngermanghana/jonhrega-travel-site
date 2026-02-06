@@ -187,6 +187,6 @@ export const tours = [
       "Flight support (if needed)",
       "Visa guidance (if applicable)"
     ],
-    image: "/images/south-africa.jpg"
+    image: "/images/south%20africa.jpeg"
   }
 ];
