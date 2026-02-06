@@ -25,6 +25,30 @@ const offers = [
       "Guidance for US tourist and business visa applications including DS-160 review and interview preparation.",
     topic: "USA: B1/B2 Visitor Visa (DS-160 review + Interview prep)",
     image: "/images/usa.jpeg"
+  },
+  {
+    title: "Schengen – Tourist & Business Visa",
+    subtitle: "Schengen visa application from Ghana",
+    description:
+      "Support for Schengen short-stay, business, and family visit visas with document checks and appointment guidance.",
+    topic: "Schengen: Tourist visa, Business travel, or Family visit",
+    image: "/images/schengen.jpeg"
+  },
+  {
+    title: "Australia – Visitor & Student Visa",
+    subtitle: "Australia visa application support",
+    description:
+      "Step-by-step guidance for Australian visitor and student visa applications, including documentation support.",
+    topic: "Australia: Visitor visa or Student visa",
+    image: "/images/Australia.jpeg"
+  },
+  {
+    title: "New Zealand – Visitor & Study Visa",
+    subtitle: "New Zealand visa services from Ghana",
+    description:
+      "Personalized help for New Zealand visitor and study visas, from document review to submission readiness.",
+    topic: "New Zealand: Visitor visa or Study visa",
+    image: "/images/new%20zealand.jpeg"
   }
 ];
 
