@@ -11,8 +11,16 @@ export function pageTitle(title) {
   return title ? `${title} | ${seo.siteName}` : seo.siteName;
 }
 
+function normalizePath(path = "/") {
+  if (!path) return "/";
+  const withLeadingSlash = path.startsWith("/") ? path : `/${path}`;
+  if (withLeadingSlash === "/") return "/";
+  return withLeadingSlash.replace(/\/+$/, "");
+}
+
 export function absUrl(path = "/") {
-  return `${seo.baseUrl}${path}`;
+  const normalizedPath = normalizePath(path);
+  return `${seo.baseUrl}${normalizedPath}`;
 }
 
 export function absImage(imgPath) {
