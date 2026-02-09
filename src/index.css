@@ -56,9 +56,10 @@ a:hover{ text-decoration: underline; }
   align-items: center;
 }
 .brand__logo{
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  object-position: center 60%;
   border-radius: 14px;
   border: 1px solid rgba(11,31,58,.14);
   box-shadow: var(--shadow);
