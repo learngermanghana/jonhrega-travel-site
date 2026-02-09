@@ -127,6 +127,9 @@ a:hover{ text-decoration: underline; }
   padding: 3.5rem 0 2rem;
   position: relative;
   overflow: hidden;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
 }
 .hero::before{
   content: "";
@@ -134,7 +137,7 @@ a:hover{ text-decoration: underline; }
   inset: 0;
   background:
     linear-gradient(90deg, rgba(245,249,255,.88) 0%, rgba(245,249,255,.62) 55%, rgba(245,249,255,.25) 100%),
-    url("/images/plane.jpeg") center/cover no-repeat;
+    url("/images/plane.jpeg") center/contain no-repeat;
   z-index: 0;
 }
 .hero__inner{
@@ -144,6 +147,7 @@ a:hover{ text-decoration: underline; }
   align-items: start;
   position: relative;
   z-index: 1;
+  width: 100%;
 }
 .hero__logo{
   width: min(200px, 60vw);
