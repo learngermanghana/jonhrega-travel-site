@@ -133,10 +133,10 @@ export const tours = [
     image: "/images/poland.jpeg"
   },
   {
-    slug: "zanzibar-beach-holiday",
-    title: "Zanzibar Beach Holiday",
-    subtitle: "Beach relaxation • Stone Town • Spice tour",
-    destination: "Zanzibar",
+    slug: "singapore-city-escape",
+    title: "Singapore City Escape",
+    subtitle: "Marina Bay • Gardens • Hawker food tour",
+    destination: "Singapore",
     durationDays: 6,
     budget: "Budget-friendly",
     duration: "4–7 days",
@@ -145,30 +145,30 @@ export const tours = [
     includes: [
       "Hotel booking options",
       "Airport transfers",
-      "Island tours planning",
+      "City tour planning",
       "Flight support (if needed)",
       "Travel insurance guidance"
     ],
-    image: "/images/zanzibar.jpg"
+    image: "/images/Syngapore.jpeg"
   },
   {
-    slug: "kenya-safari",
-    title: "Kenya Safari Experience",
-    subtitle: "Safari • Nature • Cultural experiences",
-    destination: "Kenya",
+    slug: "japan-cultural-tour",
+    title: "Japan Cultural Tour",
+    subtitle: "Tokyo • Kyoto • Temples & street food",
+    destination: "Japan",
     durationDays: 8,
     budget: "Premium",
     duration: "5–10 days",
     dateRange: "Seasonal / flexible",
     priceNote: "Price: Contact for quote",
     includes: [
-      "Safari package planning",
-      "Hotel/lodge reservations",
+      "Hotel booking options",
       "Airport transfers",
+      "Rail pass guidance",
       "Tour itinerary planning",
       "Visa/travel documentation guidance"
     ],
-    image: "/images/kenya.jpg"
+    image: "/images/japan.jpeg"
   },
   {
     slug: "south-africa-tour",
