@@ -138,7 +138,7 @@ a:hover{ text-decoration: underline; }
   inset: 0;
   background:
     linear-gradient(90deg, rgba(245,249,255,.88) 0%, rgba(245,249,255,.62) 55%, rgba(245,249,255,.25) 100%),
-    url("/images/plane.jpeg") center/contain no-repeat;
+    url("/images/plane.jpeg") right center/cover no-repeat;
   z-index: 0;
 }
 .hero__inner{
@@ -517,6 +517,14 @@ input:focus, select:focus, textarea:focus{
   .footer__links{ text-align: left; }
   .nav__links{ display: none; }
   .nav__toggle{ display: inline-flex; align-items: center; justify-content: center; }
+}
+
+@media (max-width: 720px){
+  .hero::before{
+    background:
+      linear-gradient(180deg, rgba(245,249,255,.92) 0%, rgba(245,249,255,.65) 45%, rgba(245,249,255,.28) 100%),
+      url("/images/plane.jpeg") center/cover no-repeat;
+  }
 }
 
 /* ROUTES */
