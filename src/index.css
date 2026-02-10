@@ -164,6 +164,17 @@ a:hover{ text-decoration: underline; }
   box-shadow: var(--shadow);
   padding: .35rem;
 }
+
+.hero__secondaryLogo{
+  width: clamp(130px, 24vw, 220px);
+  height: auto;
+  margin-bottom: 1rem;
+  border-radius: 18px;
+  border: 1px solid rgba(11,31,58,.16);
+  background: rgba(255,255,255,.46);
+  box-shadow: var(--shadow);
+  padding: .4rem;
+}
 .badge{
   display: inline-flex;
   padding: .45rem .75rem;
