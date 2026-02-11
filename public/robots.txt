@@ -1,4 +1,9 @@
-﻿User-agent: *
+User-agent: *
 Allow: /
+
+# Keep key assets crawlable
+Allow: /favicon.svg
+Allow: /logo.svg
+Allow: /og.svg
 
 Sitemap: https://www.jonhregatravelandtours.com/sitemap.xml
