@@ -921,3 +921,42 @@ input:focus, select:focus, textarea:focus{
   .blogGrid{ grid-template-columns: 1fr; }
   .formGrid{ grid-template-columns: 1fr; }
 }
+
+.quickLinksGrid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.quickLinkCard{
+  display: block;
+  border: 1px solid rgba(11,31,58,.12);
+  background: rgba(255,255,255,.62);
+  border-radius: 18px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+}
+
+.quickLinkCard h3{
+  margin: 0 0 .5rem;
+  font-size: 1.05rem;
+}
+
+.quickLinkCard p{
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.quickLinkCard span{
+  display: inline-block;
+  margin-top: .9rem;
+  font-weight: 700;
+  color: var(--brand);
+}
+
+@media (max-width: 900px){
+  .quickLinksGrid{
+    grid-template-columns: 1fr;
+  }
+}
