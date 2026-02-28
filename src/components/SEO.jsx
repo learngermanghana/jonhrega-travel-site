@@ -27,7 +27,32 @@ function setCanonical(url) {
   link.setAttribute("href", url);
 }
 
-export default function SEO({ title, description, path = "/", image }) {
+function setJsonLd(structuredData = []) {
+  if (typeof document === "undefined") return;
+
+  document.head
+    .querySelectorAll('script[data-seo-jsonld="true"]')
+    .forEach((node) => node.remove());
+
+  structuredData
+    .filter(Boolean)
+    .forEach((schema) => {
+      const script = document.createElement("script");
+      script.setAttribute("type", "application/ld+json");
+      script.setAttribute("data-seo-jsonld", "true");
+      script.textContent = JSON.stringify(schema);
+      document.head.appendChild(script);
+    });
+}
+
+export default function SEO({
+  title,
+  description,
+  path = "/",
+  image,
+  ogType = "website",
+  structuredData = []
+}) {
   useEffect(() => {
     const t = pageTitle(title);
     const d = description || seo.defaultDescription;
@@ -41,7 +66,7 @@ export default function SEO({ title, description, path = "/", image }) {
     setMetaTag({ name: "description", content: d });
     setCanonical(url);
 
-    setMetaTag({ property: "og:type", content: "website" });
+    setMetaTag({ property: "og:type", content: ogType });
     setMetaTag({ property: "og:site_name", content: seo.siteName });
     setMetaTag({ property: "og:title", content: t });
     setMetaTag({ property: "og:description", content: d });
@@ -53,7 +78,8 @@ export default function SEO({ title, description, path = "/", image }) {
     setMetaTag({ name: "twitter:title", content: t });
     setMetaTag({ name: "twitter:description", content: d });
     setMetaTag({ name: "twitter:image", content: img });
-  }, [title, description, path, image]);
+    setJsonLd(structuredData);
+  }, [title, description, path, image, ogType, structuredData]);
 
   return null;
 }

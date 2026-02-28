@@ -11,7 +11,7 @@ export default function BlogHighlights() {
         </div>
         <div className="blogGrid">
           {blogPosts.map((post) => (
-            <article className="blogCard" key={post.slug}>
+            <article className="blogCard" key={post.slug} id={post.slug}>
               <div className="blogCard__meta">
                 <span>{post.category}</span>
                 <span>•</span>
