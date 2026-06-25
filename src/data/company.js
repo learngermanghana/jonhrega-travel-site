@@ -1,4 +1,4 @@
-﻿export const company = {
+export const company = {
   name: "Jonhrega Travel and Tours",
   tagline: "Visa • Study Abroad • Flights • Corporate Travel • Medical Tourism • Insurance",
   licensedNote: "Licensed by Ghana Tourism Authority",
@@ -6,11 +6,11 @@
   website: "www.jonhregatravelandtours.com",
   email: "Jonhregatravelandtours@yahoo.com",
   phones: [
-    { label: "Call", value: "+233243410568", raw: "00233243410568" },
+    { label: "Call", value: "+233506481854", raw: "050 648 1854" },
     { label: "Call", value: "+233241420067", raw: "00233241420067" }
   ],
   whatsappNumbers: [
-    { label: "WhatsApp", value: "233243410568" },
+    { label: "WhatsApp", value: "233506481854" },
     { label: "WhatsApp", value: "233241420067" }
   ],
   address: {
