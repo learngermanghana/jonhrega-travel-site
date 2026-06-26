@@ -70,8 +70,11 @@ export default function Contact() {
             <div className="kv">
               <div className="kv__k">Phone</div>
               <div className="kv__v">
-                <div><a href={"tel:" + company.phones[0].value}>{company.phones[0].raw}</a></div>
-                <div><a href={"tel:" + company.phones[1].value}>{company.phones[1].raw}</a></div>
+                {company.phones.map((phone) => (
+                  <div key={phone.raw}>
+                    <a href={"tel:" + phone.value}>{phone.raw}</a>
+                  </div>
+                ))}
               </div>
             </div>
 

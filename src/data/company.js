@@ -6,6 +6,7 @@ export const company = {
   website: "www.jonhregatravelandtours.com",
   email: "Serwornue@yahoo.co.uk",
   phones: [
+    { label: "Call", value: "+233506481854", raw: "0023350 648 1854" },
     { label: "Call", value: "+233506481854", raw: "050 648 1854" },
     { label: "Call", value: "+233241420067", raw: "00233241420067" }
   ],
