@@ -4,14 +4,10 @@ export const company = {
   licensedNote: "Licensed by Ghana Tourism Authority",
   licenseNumberPlaceholder: "License No.: AWTT00006525",
   website: "www.jonhregatravelandtours.com",
-  email: "Jonhregatravelandtours@yahoo.com",
+  email: "Serwornue@yahoo.co.uk",
   phones: [
     { label: "Call", value: "+233506481854", raw: "050 648 1854" },
     { label: "Call", value: "+233241420067", raw: "00233241420067" }
-  ],
-  whatsappNumbers: [
-    { label: "WhatsApp", value: "233506481854" },
-    { label: "WhatsApp", value: "233241420067" }
   ],
   address: {
     digital: [

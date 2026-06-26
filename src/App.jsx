@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import WhatsAppFloat from "./components/WhatsAppFloat";
+import EmailFloat from "./components/EmailFloat";
 import Hero from "./components/Hero";
 
 import Home from "./pages/Home";
@@ -31,7 +31,7 @@ export default function App() {
       </main>
 
       <Footer />
-      <WhatsAppFloat />
+      <EmailFloat />
     </div>
   );
 }

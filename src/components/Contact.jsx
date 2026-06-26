@@ -30,10 +30,8 @@ export default function Contact() {
     return "https://www.google.com/maps/search/?api=1&query=" + q;
   }, []);
 
-  const wa = company.whatsappNumbers?.[0]?.value;
-
-  const waLink = useMemo(() => {
-    if (!wa) return null;
+  const emailLink = useMemo(() => {
+    if (!company.email) return null;
     const msg =
       `Hello ${company.name},\n\n` +
       `Name: ${name}\n` +
@@ -41,24 +39,21 @@ export default function Contact() {
       `Service: ${service}\n\n` +
       `Message:\n${message}\n\n` +
       `Please respond with requirements, timeline, and cost.`;
-    return `https://wa.me/${wa}?text=${encodeURIComponent(msg)}`;
-  }, [wa, name, phone, service, message]);
+    return `mailto:${company.email}?subject=${encodeURIComponent(service + " request")}&body=${encodeURIComponent(msg)}`;
+  }, [name, phone, service, message]);
 
   function submit(e) {
     e.preventDefault();
-    if (!waLink) return;
-    window.open(waLink, "_blank", "noreferrer");
+    if (!emailLink) return;
+    window.location.href = emailLink;
   }
-
-  const wa1 = company.whatsappNumbers?.[0]?.value ? ("https://wa.me/" + company.whatsappNumbers[0].value) : null;
-  const wa2 = company.whatsappNumbers?.[1]?.value ? ("https://wa.me/" + company.whatsappNumbers[1].value) : null;
 
   return (
     <section className="section">
       <Container>
         <div className="section__head">
           <h2>Contact</h2>
-          <p>Reach us by phone, email, WhatsApp, or send a quick request below.</p>
+          <p>Reach us by phone, email, or send a quick request below.</p>
         </div>
 
         <div className="twoCol twoCol--contact">
@@ -95,14 +90,13 @@ export default function Contact() {
             </div>
 
             <div className="actions">
-              {wa1 && <a className="btn" href={wa1} target="_blank" rel="noreferrer">WhatsApp 1</a>}
-              {wa2 && <a className="btn btn--ghost" href={wa2} target="_blank" rel="noreferrer">WhatsApp 2</a>}
+              <a className="btn" href={"mailto:" + company.email}>Email Us</a>
               <a className="btn btn--ghost" href={mapUrl} target="_blank" rel="noreferrer">Open Map</a>
             </div>
           </div>
 
           <form className="card card--form" onSubmit={submit}>
-            <h3 className="card__title">Send a request (WhatsApp)</h3>
+            <h3 className="card__title">Send a request by email</h3>
 
             <label className="field">
               <span>Your Name</span>
@@ -110,7 +104,7 @@ export default function Contact() {
             </label>
 
             <label className="field">
-              <span>Your Phone / WhatsApp</span>
+              <span>Your Phone</span>
               <input value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="+233..." />
             </label>
 
@@ -131,12 +125,12 @@ export default function Contact() {
               <textarea value={message} onChange={(e) => setMessage(e.target.value)} required placeholder="Tell us what you need..." rows="6" />
             </label>
 
-            <button className="btn" type="submit" disabled={!waLink}>
-              Send to WhatsApp
+            <button className="btn" type="submit" disabled={!emailLink}>
+              Send by Email
             </button>
 
             <p className="tiny">
-              This opens WhatsApp with your message prepared. For detailed requests, use the Assessment form.
+              This opens your email app with your message prepared. For detailed requests, use the Assessment form.
             </p>
           </form>
         </div>

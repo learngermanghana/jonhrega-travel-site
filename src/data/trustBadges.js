@@ -1,4 +1,4 @@
-﻿export const trustBadges = [
+export const trustBadges = [
   {
     title: "Licensed by Ghana Tourism Authority",
     text: "Verified travel & tour operations (add license number on site)."
@@ -9,6 +9,6 @@
   },
   {
     title: "Fast Communication",
-    text: "Quick responses via phone, email & WhatsApp."
+    text: "Quick responses via phone and email."
   }
 ];
