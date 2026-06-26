@@ -1,4 +1,4 @@
-import Container from "./Container";
+﻿import Container from "./Container";
 
 const highlights = [
   {
@@ -11,7 +11,7 @@ const highlights = [
   },
   {
     title: "Fast support & follow-up",
-    text: "WhatsApp and phone support plus proactive updates as we coordinate bookings and documents."
+    text: "Email and phone support plus proactive updates as we coordinate bookings and documents."
   }
 ];
 

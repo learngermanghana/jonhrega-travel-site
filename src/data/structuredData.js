@@ -54,7 +54,7 @@ export function faqSchema() {
         name: "How do I start a visa assessment?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Go to the visa assessment page, fill in your travel details, and submit directly to WhatsApp for quick guidance."
+          text: "Go to the visa assessment page, fill in your travel details, and submit directly by email for quick guidance."
         }
       },
       {

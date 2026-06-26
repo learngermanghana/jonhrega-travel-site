@@ -11,7 +11,7 @@ const relatedLinks = [
   {
     to: "/assessment",
     title: "Visa Assessment Tool",
-    description: "Submit your travel profile and get a guided visa and document response on WhatsApp."
+    description: "Submit your travel profile and get a guided visa and document response by email."
   },
   {
     to: "/blog",

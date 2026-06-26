@@ -27,14 +27,14 @@ export default function AssessmentPage() {
     <>
       <SEO
         title="Visa Assessment & Booking"
-        description="Submit a visa assessment or booking request and get a fast response on WhatsApp."
+        description="Submit a visa assessment or booking request and get a fast response by email."
         path="/assessment"
         image="/images/ghanapassport.jpg"
         structuredData={[faqSchema()]}
       />
       <PageHeader
         title="Visa Assessment / Booking"
-        subtitle="Send your request directly to WhatsApp for fast response."
+        subtitle="Send your request directly by email for fast response."
       />
       <VisaAssessmentForm />
       <InternalLinksSection

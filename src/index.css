@@ -1,4 +1,4 @@
-﻿:root{
+:root{
   --bg: #f5f9ff;
   --panel: #ffffff;
   --panel2: #f0f6ff;
@@ -843,8 +843,8 @@ input:focus, select:focus, textarea:focus{
   grid-column: 1 / -1;
 }
 
-/* Floating WhatsApp */
-.waFloat{
+/* Floating email CTA */
+.emailFloat{
   position: fixed;
   right: 18px;
   bottom: 18px;
@@ -861,8 +861,8 @@ input:focus, select:focus, textarea:focus{
   font-weight: 950;
   text-decoration: none;
 }
-.waFloat:hover{ filter: brightness(1.07); text-decoration: none; }
-.waFloat__dot{
+.emailFloat:hover{ filter: brightness(1.07); text-decoration: none; }
+.emailFloat__dot{
   width: 10px;
   height: 10px;
   border-radius: 999px;

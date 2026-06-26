@@ -7,12 +7,12 @@ export default function ContactPage() {
     <>
       <SEO
         title="Contact"
-        description="Contact Jonhrega Travel and Tours by phone, email, or WhatsApp for fast response."
+        description="Contact Jonhrega Travel and Tours by phone or email for fast response."
         path="/contact"
       />
       <PageHeader
         title="Contact"
-        subtitle="Call, email, WhatsApp, or send a request and we’ll respond quickly."
+        subtitle="Call, email, or send a request and we’ll respond quickly."
       />
       <Contact />
     </>

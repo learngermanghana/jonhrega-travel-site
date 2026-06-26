@@ -36,10 +36,8 @@ export default function VisaAssessmentForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const wa = company.whatsappNumbers?.[0]?.value;
-
-  const waLink = useMemo(() => {
-    if (!wa) return null;
+  const emailLink = useMemo(() => {
+    if (!company.email) return null;
 
     const msg =
       `Hello ${company.name},\n\n` +
@@ -53,13 +51,13 @@ export default function VisaAssessmentForm() {
       `Notes:\n${notes || "None"}\n\n` +
       `Please share requirements, processing steps, timeline, and cost.`;
 
-    return `https://wa.me/${wa}?text=${encodeURIComponent(msg)}`;
-  }, [wa, purpose, fullName, phone, destination, visaType, travelDate, budget, notes]);
+    return `mailto:${company.email}?subject=${encodeURIComponent(purpose)}&body=${encodeURIComponent(msg)}`;
+  }, [purpose, fullName, phone, destination, visaType, travelDate, budget, notes]);
 
   function submit(e) {
     e.preventDefault();
-    if (!waLink) return;
-    window.open(waLink, "_blank", "noreferrer");
+    if (!emailLink) return;
+    window.location.href = emailLink;
   }
 
   return (
@@ -68,7 +66,7 @@ export default function VisaAssessmentForm() {
         <div className="section__head">
           <h2>Visa Assessment / Booking Form</h2>
           <p>
-            Fill this form and send directly to WhatsApp. We’ll respond with requirements and next steps.
+            Fill this form and send it by email. We’ll respond with requirements and next steps.
           </p>
         </div>
 
@@ -80,7 +78,7 @@ export default function VisaAssessmentForm() {
             </label>
 
             <label className="field">
-              <span>Phone / WhatsApp Number</span>
+              <span>Phone Number</span>
               <input value={phone} onChange={(e) => setPhone(e.target.value)} required placeholder="+233..." />
             </label>
 
@@ -125,12 +123,12 @@ export default function VisaAssessmentForm() {
             </label>
           </div>
 
-          <button className="btn" type="submit" disabled={!waLink}>
-            Send to WhatsApp
+          <button className="btn" type="submit" disabled={!emailLink}>
+            Send by Email
           </button>
 
           <p className="tiny">
-            This opens WhatsApp with a prepared message. If WhatsApp is not installed, it will open WhatsApp Web.
+            This opens your email app with a prepared message addressed to us.
           </p>
         </form>
       </Container>
