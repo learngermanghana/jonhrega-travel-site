@@ -113,7 +113,7 @@ export default async function handler(req, res) {
     return sendJson(res, 500, {
       ok: false,
       message:
-        "Sedifex integration is not configured. Add SEDIFEX_BOOKING_TARGET_STORE_ID and SEDIFEX_BOOKING_API_KEY in the website environment."
+        "The online service list is not configured yet. Please contact Jonhrega Travel and Tours for assistance."
     });
   }
 
@@ -131,7 +131,7 @@ export default async function handler(req, res) {
     if (!response.ok || body.ok === false) {
       return sendJson(res, response.status || 502, {
         ok: false,
-        message: body.message || body.error || "Could not load Sedifex services.",
+        message: body.message || body.error || "Could not load services right now.",
         status: response.status
       });
     }
@@ -150,7 +150,7 @@ export default async function handler(req, res) {
   } catch (error) {
     return sendJson(res, 500, {
       ok: false,
-      message: error instanceof Error ? error.message : "Sedifex service request failed."
+      message: error instanceof Error ? error.message : "Service list request failed."
     });
   }
 }
