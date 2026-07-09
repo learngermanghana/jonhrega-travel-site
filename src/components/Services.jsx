@@ -13,6 +13,12 @@ function formatPrice(price) {
   }).format(amount);
 }
 
+function makeContactLink(service) {
+  const serviceName = encodeURIComponent(service.name || "Travel service");
+  const topic = encodeURIComponent(`Question about ${service.name || "a travel service"}`);
+  return `/contact?service=${serviceName}&topic=${topic}`;
+}
+
 function ServiceImage({ service }) {
   const [hidden, setHidden] = useState(!service.imageUrl);
 
@@ -41,10 +47,16 @@ function ServiceCard({ service }) {
         </div>
         <h3 className="serviceCard__title">{service.name}</h3>
         <p className="serviceCard__text">{service.description}</p>
-        <div className="serviceCard__footer">
+        <div className="serviceCard__priceRow">
+          <span>Service fee</span>
           <strong>{formatPrice(service.price)}</strong>
+        </div>
+        <div className="serviceCard__actions">
           <Link className="btn btn--small" to={`/booking?serviceId=${encodeURIComponent(service.id)}`}>
             Book Appointment
+          </Link>
+          <Link className="btn btn--ghost btn--small" to={makeContactLink(service)}>
+            Ask Question
           </Link>
         </div>
       </div>
