@@ -11,7 +11,7 @@ const relatedLinks = [
   {
     to: "/booking",
     title: "Book an Appointment",
-    description: "Choose a Sedifex service, submit your booking, and continue to Paystack checkout when payment is required."
+    description: "Choose the service you need, submit your appointment request, and continue to secure checkout when payment is required."
   },
   {
     to: "/blog",
@@ -29,15 +29,15 @@ export default function ServicesPage() {
   return (
     <>
       <SEO
-        title="Live Travel & Visa Services"
-        description="Browse Jonhrega Travel and Tours services from Sedifex, book an appointment, and pay securely with Paystack when required."
+        title="Travel & Visa Services"
+        description="Browse Jonhrega Travel and Tours services, book an appointment, and pay securely with Paystack when required."
         path="/services"
         image="/images/plane inside.jpeg"
         structuredData={serviceSchemas()}
       />
       <PageHeader
         title="Our Services"
-        subtitle="Live visa, study abroad, flight, travel, tourism, and insurance services powered by Sedifex."
+        subtitle="Visa support, study abroad guidance, flight booking, tour planning, travel insurance, and appointment-based travel assistance."
       />
       <Services />
       <InternalLinksSection
