@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Container from "./Container";
 
 const appointmentTimes = [
@@ -11,6 +11,13 @@ const appointmentTimes = [
   "14:00",
   "15:00",
   "16:00"
+];
+
+const trustBadges = [
+  "Licensed by Ghana Tourism Authority",
+  "Secure online checkout",
+  "WhatsApp follow-up",
+  "Accra-based travel support"
 ];
 
 function todayIsoDate() {
@@ -38,6 +45,7 @@ export default function BookingForm() {
   const [submitting, setSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState("");
   const [submitError, setSubmitError] = useState("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   const [form, setForm] = useState({
     serviceId: requestedServiceId,
@@ -111,6 +119,10 @@ export default function BookingForm() {
     setSubmitMessage("");
 
     try {
+      if (!acceptedTerms) {
+        throw new Error("Please accept the Terms of Service and Privacy Policy before booking.");
+      }
+
       const response = await fetch("/api/sedifex/bookings", {
         method: "POST",
         headers: {
@@ -137,7 +149,9 @@ export default function BookingForm() {
             sourceLabel: "Client website",
             pageUrl: window.location.href,
             timezone: "Africa/Accra",
-            locale: "en-GB"
+            locale: "en-GB",
+            termsAccepted: true,
+            termsAcceptedAt: new Date().toISOString()
           }
         })
       });
@@ -149,12 +163,17 @@ export default function BookingForm() {
       }
 
       if (data.checkoutUrl || data.authorizationUrl) {
-        setSubmitMessage("Appointment created. Redirecting you to secure checkout...");
+        setSubmitMessage(
+          "Your appointment request has been received. If payment is required, you will now continue to secure checkout. Our team will also contact you by phone or WhatsApp."
+        );
         window.location.href = data.checkoutUrl || data.authorizationUrl;
         return;
       }
 
-      setSubmitMessage(data.message || "Appointment request created successfully. Our team will contact you soon.");
+      setSubmitMessage(
+        data.message ||
+          "Your appointment request has been received. Our team will contact you by phone or WhatsApp with the next steps."
+      );
     } catch (err) {
       setSubmitError(err.message || "Could not create booking.");
     } finally {
@@ -172,18 +191,38 @@ export default function BookingForm() {
           </p>
         </div>
 
-        <div className="bookingSteps">
-          <div className="miniCard">
-            <div className="miniCard__title">1. Choose your service</div>
-            <div className="miniCard__text">Select visa help, study abroad guidance, flights, insurance, tours, or another travel service.</div>
+        <div className="bookingTrustGrid" aria-label="Booking trust points">
+          {trustBadges.map((badge) => (
+            <div className="bookingTrustBadge" key={badge}>{badge}</div>
+          ))}
+        </div>
+
+        <div className="bookingHowItWorks">
+          <div className="section__head">
+            <h2>How booking works</h2>
+            <p>Follow these steps so our team can prepare the right guidance for your travel request.</p>
           </div>
-          <div className="miniCard">
-            <div className="miniCard__title">2. Pick a time</div>
-            <div className="miniCard__text">Choose the appointment date and time that works best for you.</div>
-          </div>
-          <div className="miniCard">
-            <div className="miniCard__title">3. Confirm securely</div>
-            <div className="miniCard__text">Submit your details and pay online when checkout is required for the selected service.</div>
+          <div className="bookingSteps">
+            <div className="miniCard">
+              <div className="miniCard__title">1. Choose your service</div>
+              <div className="miniCard__text">Select visa help, study abroad guidance, flights, insurance, tours, or another travel service.</div>
+            </div>
+            <div className="miniCard">
+              <div className="miniCard__title">2. Pick a time</div>
+              <div className="miniCard__text">Choose the appointment date and time that works best for you.</div>
+            </div>
+            <div className="miniCard">
+              <div className="miniCard__title">3. Submit your details</div>
+              <div className="miniCard__text">Share your contact details and travel notes so we know exactly what you need.</div>
+            </div>
+            <div className="miniCard">
+              <div className="miniCard__title">4. Pay if required</div>
+              <div className="miniCard__text">Continue to secure checkout only when the selected service requires online payment.</div>
+            </div>
+            <div className="miniCard">
+              <div className="miniCard__title">5. Get follow-up</div>
+              <div className="miniCard__text">Our team contacts you with requirements, timeline, and next steps.</div>
+            </div>
           </div>
         </div>
 
@@ -282,11 +321,23 @@ export default function BookingForm() {
               </label>
             </div>
 
+            <label className="termsCheck">
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                required
+              />
+              <span>
+                I agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>.
+              </span>
+            </label>
+
             {serviceError && <p className="formAlert formAlert--error">{serviceError}</p>}
             {submitError && <p className="formAlert formAlert--error">{submitError}</p>}
             {submitMessage && <p className="formAlert formAlert--success">{submitMessage}</p>}
 
-            <button className="btn" type="submit" disabled={submitting || loadingServices || !selectedService}>
+            <button className="btn" type="submit" disabled={submitting || loadingServices || !selectedService || !acceptedTerms}>
               {submitting ? "Creating appointment..." : paymentAmount > 0 ? "Book & Pay Securely" : "Create Appointment"}
             </button>
 
