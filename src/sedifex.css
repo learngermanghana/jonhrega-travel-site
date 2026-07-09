@@ -110,6 +110,19 @@
 
 .serviceCard__actions{
   margin-top: .1rem;
+  align-items: center;
+}
+
+.serviceCard__actions .textLink{
+  color: rgba(11,31,58,.70);
+  font-weight: 900;
+  text-decoration: none;
+  padding: .55rem .2rem;
+}
+
+.serviceCard__actions .textLink:hover{
+  color: var(--brand);
+  text-decoration: underline;
 }
 
 .serviceFilter{
