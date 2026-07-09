@@ -65,7 +65,7 @@ export default function BookingForm() {
         const data = await response.json().catch(() => ({}));
 
         if (!response.ok || data.ok === false) {
-          throw new Error(data.message || "Could not load Sedifex services.");
+          throw new Error(data.message || "Could not load services right now.");
         }
 
         const nextServices = Array.isArray(data.services) ? data.services : [];
@@ -80,7 +80,7 @@ export default function BookingForm() {
         });
       } catch (err) {
         if (err.name !== "AbortError") {
-          setServiceError(err.message || "Could not load Sedifex services.");
+          setServiceError(err.message || "Could not load services right now.");
         }
       } finally {
         if (!controller.signal.aborted) setLoadingServices(false);
@@ -149,12 +149,12 @@ export default function BookingForm() {
       }
 
       if (data.checkoutUrl || data.authorizationUrl) {
-        setSubmitMessage("Booking created. Redirecting you to secure checkout...");
+        setSubmitMessage("Appointment created. Redirecting you to secure checkout...");
         window.location.href = data.checkoutUrl || data.authorizationUrl;
         return;
       }
 
-      setSubmitMessage(data.message || "Booking created successfully. Staff will contact you soon.");
+      setSubmitMessage(data.message || "Appointment request created successfully. Our team will contact you soon.");
     } catch (err) {
       setSubmitError(err.message || "Could not create booking.");
     } finally {
@@ -168,8 +168,23 @@ export default function BookingForm() {
         <div className="section__head">
           <h2>Book an appointment</h2>
           <p>
-            Choose a Sedifex service, select your preferred appointment date and time, and continue to Paystack checkout when the service has a price.
+            Tell us what you need, choose your preferred date and time, and we will receive your request immediately. If the service requires payment, you will continue to secure Paystack checkout after submitting.
           </p>
+        </div>
+
+        <div className="bookingSteps">
+          <div className="miniCard">
+            <div className="miniCard__title">1. Choose your service</div>
+            <div className="miniCard__text">Select visa help, study abroad guidance, flights, insurance, tours, or another travel service.</div>
+          </div>
+          <div className="miniCard">
+            <div className="miniCard__title">2. Pick a time</div>
+            <div className="miniCard__text">Choose the appointment date and time that works best for you.</div>
+          </div>
+          <div className="miniCard">
+            <div className="miniCard__title">3. Confirm securely</div>
+            <div className="miniCard__text">Submit your details and pay online when checkout is required for the selected service.</div>
+          </div>
         </div>
 
         <div className="twoCol bookingLayout">
@@ -272,11 +287,11 @@ export default function BookingForm() {
             {submitMessage && <p className="formAlert formAlert--success">{submitMessage}</p>}
 
             <button className="btn" type="submit" disabled={submitting || loadingServices || !selectedService}>
-              {submitting ? "Creating booking..." : paymentAmount > 0 ? "Book & Pay with Paystack" : "Create Booking"}
+              {submitting ? "Creating appointment..." : paymentAmount > 0 ? "Book & Pay Securely" : "Create Appointment"}
             </button>
 
             <p className="tiny">
-              Your booking is first saved in Sedifex. Payment is confirmed by Sedifex/Paystack after checkout, not by the browser return page.
+              Your appointment request is saved first. Online payment is confirmed only after secure checkout verification.
             </p>
           </form>
 
@@ -317,7 +332,7 @@ export default function BookingForm() {
                 </p>
               </>
             ) : (
-              <p className="tiny">Load a service from Sedifex to see appointment details.</p>
+              <p className="tiny">Load a service from our service list to see appointment details.</p>
             )}
           </aside>
         </div>
