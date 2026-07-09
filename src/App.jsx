@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import EmailFloat from "./components/EmailFloat";
+import MobileActionBar from "./components/MobileActionBar";
 
 import Home from "./pages/Home";
 import ServicesPage from "./pages/ServicesPage";
@@ -37,6 +38,7 @@ export default function App() {
 
       <Footer />
       <EmailFloat />
+      <MobileActionBar />
     </div>
   );
 }
