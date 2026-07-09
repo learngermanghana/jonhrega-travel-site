@@ -1,16 +1,49 @@
-# React + Vite
+# Jonhrega Travel and Tours Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + Vite website for Jonhrega Travel and Tours.
 
-Currently, two official plugins are available:
+## Sedifex integration
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The `/services` page loads the live product/service catalog through a server-side API proxy:
 
-## React Compiler
+- `GET /api/sedifex/products`
+- Upstream: `GET /v1IntegrationProducts?storeId=<storeId>`
+- Services are filtered by `itemType === "service"` or `type === "SERVICE"`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The `/booking` page creates a Sedifex booking first, then starts hosted checkout when the selected service has a price:
 
-## Expanding the ESLint configuration
+- `POST /api/sedifex/bookings`
+- Upstream booking: `POST /v1IntegrationBookings?storeId=<storeId>`
+- Upstream checkout: `POST /integrationCheckoutCreate`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+The `/payment/return` page only shows a processing message. It does not mark payment as confirmed. Final confirmation must come from Sedifex/Paystack verification or webhook processing.
+
+## Required environment variables
+
+Add these in Vercel or the website backend environment. Do not expose keys with `NEXT_PUBLIC_` or `VITE_`.
+
+```bash
+SEDIFEX_API_BASE_URL=https://us-central1-sedifex-web.cloudfunctions.net
+SEDIFEX_INTEGRATION_API_BASE_URL=https://us-central1-sedifex-web.cloudfunctions.net
+SEDIFEX_BOOKING_TARGET_STORE_ID=store_123
+SEDIFEX_BOOKING_API_KEY=sedx_store_key_here
+SEDIFEX_CHECKOUT_API_KEY=sedx_store_key_here
+SEDIFEX_INTEGRATION_CHECKOUT_CREATE_URL=https://us-central1-sedifex-web.cloudfunctions.net/integrationCheckoutCreate
+SEDIFEX_CHECKOUT_RETURN_URL=https://www.jonhregatravelandtours.com/payment/return
+SEDIFEX_CONTRACT_VERSION=2026-04-13
+```
+
+The Sedifex API key must be allowed for the same store id used by `SEDIFEX_BOOKING_TARGET_STORE_ID`.
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+## Build
+
+```bash
+npm run build
+```
