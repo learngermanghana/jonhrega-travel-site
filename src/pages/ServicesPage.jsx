@@ -9,9 +9,9 @@ import { serviceSchemas } from "../data/structuredData";
 
 const relatedLinks = [
   {
-    to: "/assessment",
-    title: "Visa Assessment Tool",
-    description: "Submit your travel profile and get a guided visa and document response by email."
+    to: "/booking",
+    title: "Book an Appointment",
+    description: "Choose a Sedifex service, submit your booking, and continue to Paystack checkout when payment is required."
   },
   {
     to: "/blog",
@@ -29,15 +29,15 @@ export default function ServicesPage() {
   return (
     <>
       <SEO
-        title="Travel & Visa Services"
-        description="Visa processing, study abroad guidance, flights, corporate travel management, medical tourism, and insurance."
+        title="Live Travel & Visa Services"
+        description="Browse Jonhrega Travel and Tours services from Sedifex, book an appointment, and pay securely with Paystack when required."
         path="/services"
         image="/images/plane inside.jpeg"
         structuredData={serviceSchemas()}
       />
       <PageHeader
         title="Our Services"
-        subtitle="Visa processing, study abroad guidance, flights, corporate travel management, medical tourism, and insurance."
+        subtitle="Live visa, study abroad, flight, travel, tourism, and insurance services powered by Sedifex."
       />
       <Services />
       <InternalLinksSection
