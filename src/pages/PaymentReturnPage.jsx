@@ -15,19 +15,19 @@ export default function PaymentReturnPage() {
     <>
       <SEO
         title="Payment Processing"
-        description="Your checkout return has been received. Sedifex will confirm the final payment status."
+        description="Your checkout return has been received. Our team will confirm the final payment status."
         path="/payment/return"
       />
       <PageHeader
         title="Payment is being verified"
-        subtitle="We have received your checkout return. Sedifex and Paystack will confirm the final payment status before the booking is marked as paid."
+        subtitle="We have received your checkout return. Paystack and our booking system will confirm the final payment status before the booking is marked as paid."
       />
       <section className="section">
         <Container>
           <div className="card paymentReturnCard">
             <h2>Thank you</h2>
             <p>
-              Your booking request has been created and your checkout return was received. Please do not submit the same booking again unless our team asks you to.
+              Your appointment request has been created and your checkout return was received. Please do not submit the same booking again unless our team asks you to.
             </p>
             {reference && (
               <p className="tiny">
