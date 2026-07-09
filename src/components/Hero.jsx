@@ -1,4 +1,4 @@
-﻿import Container from "./Container";
+import Container from "./Container";
 import { company } from "../data/company";
 import { Link } from "react-router-dom";
 
@@ -20,7 +20,7 @@ export default function Hero() {
 
           <div className="hero__cta">
             <Link className="btn" to="/assessment">
-              Start Your Application
+              Hurry!! Book Consultation Now
             </Link>
             <Link className="btn btn--ghost" to="/services">
               Explore Our Services

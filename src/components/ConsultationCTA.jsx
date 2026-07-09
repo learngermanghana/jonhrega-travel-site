@@ -8,7 +8,7 @@ export default function ConsultationCTA({ eyebrow = "Let’s plan your next move
         <div className="ctaPanel">
           <div>
             <div className="ctaPanel__eyebrow">{eyebrow}</div>
-            <h2 className="ctaPanel__title">Book a consultation or request a callback.</h2>
+            <h2 className="ctaPanel__title">Book a consultation appointment now.</h2>
             <p className="ctaPanel__text">
               Tell us your destination, dates, and goals. We’ll follow up with a clear plan and pricing.
             </p>
@@ -18,7 +18,7 @@ export default function ConsultationCTA({ eyebrow = "Let’s plan your next move
               Book a Consultation
             </Link>
             <Link className="btn btn--ghost" to="/contact">
-              Request a Callback
+              Contact Us
             </Link>
           </div>
         </div>

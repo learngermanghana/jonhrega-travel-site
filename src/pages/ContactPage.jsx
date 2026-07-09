@@ -12,7 +12,7 @@ export default function ContactPage() {
       />
       <PageHeader
         title="Contact"
-        subtitle="Call, email, or send a request and we’ll respond quickly."
+        subtitle="Call, email, or message us on WhatsApp and we’ll respond quickly."
       />
       <Contact />
     </>

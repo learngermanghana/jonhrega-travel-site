@@ -13,12 +13,12 @@ export function organizationSchema() {
     name: company.name,
     url: seo.baseUrl,
     logo: absImage("/images/Jonhrega T.T.png"),
-    email: company.email,
+    email: company.displayEmail,
     telephone: company.phones?.[0]?.value,
     sameAs: [seo.baseUrl],
     address: {
       "@type": "PostalAddress",
-      streetAddress: `${company.address.digital[0]}, ${company.address.digital[1]}, ${company.address.digital[2]}`,
+      streetAddress: company.address.office[0],
       addressLocality: "Accra",
       addressCountry: "GH"
     }
