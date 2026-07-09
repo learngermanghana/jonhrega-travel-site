@@ -33,7 +33,7 @@ function getConfig(req) {
 
   const proto = req.headers["x-forwarded-proto"] || "https";
   const host = req.headers.host || "www.jonhregatravelandtours.com";
-  const fallbackReturnUrl = `${proto}://${host}/payment/return`;
+  const fallbackReturnUrl = `${proto}://${host}/booking/thank-you`;
 
   return {
     baseUrl,
@@ -215,6 +215,7 @@ async function createBookingAndCheckout(req, res, config) {
       ok: true,
       bookingId,
       paymentRequired: false,
+      thankYouUrl: `/booking/thank-you?bookingId=${encodeURIComponent(bookingId)}`,
       message: "Appointment created. Staff will confirm payment or next steps."
     });
   }
@@ -268,6 +269,7 @@ async function createBookingAndCheckout(req, res, config) {
       ok: false,
       bookingCreated: true,
       bookingId,
+      thankYouUrl: `/booking/thank-you?bookingId=${encodeURIComponent(bookingId)}`,
       message:
         checkoutData.message ||
         checkoutData.error ||
