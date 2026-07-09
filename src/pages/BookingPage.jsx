@@ -6,8 +6,8 @@ import SEO from "../components/SEO";
 const relatedLinks = [
   {
     to: "/services",
-    title: "View Live Services",
-    description: "Compare the Sedifex service catalog before choosing your appointment."
+    title: "View Our Services",
+    description: "Compare available travel, visa, flight, insurance, and consultation services before choosing your appointment."
   },
   {
     to: "/contact",
@@ -26,13 +26,13 @@ export default function BookingPage() {
     <>
       <SEO
         title="Book Travel Service Appointment"
-        description="Book a Jonhrega Travel and Tours appointment from the live Sedifex service catalog and pay securely with Paystack when required."
+        description="Book a Jonhrega Travel and Tours appointment and pay securely with Paystack when required."
         path="/booking"
         image="/images/ghanapassport.jpg"
       />
       <PageHeader
         title="Book an Appointment"
-        subtitle="Choose a service from Sedifex, reserve your preferred appointment time, and continue to secure checkout when payment is required."
+        subtitle="Choose the service you need, reserve your preferred appointment time, and continue to secure checkout when payment is required."
       />
       <BookingForm />
       <InternalLinksSection
