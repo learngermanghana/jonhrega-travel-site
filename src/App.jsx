@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import EmailFloat from "./components/EmailFloat";
@@ -9,7 +9,8 @@ import ServicesPage from "./pages/ServicesPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import ToursPage from "./pages/ToursPage";
-import AssessmentPage from "./pages/AssessmentPage";
+import BookingPage from "./pages/BookingPage";
+import PaymentReturnPage from "./pages/PaymentReturnPage";
 import BlogPage from "./pages/BlogPage";
 
 export default function App() {
@@ -23,7 +24,9 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/tours" element={<ToursPage />} />
-          <Route path="/assessment" element={<AssessmentPage />} />
+          <Route path="/booking" element={<BookingPage />} />
+          <Route path="/assessment" element={<Navigate to="/booking" replace />} />
+          <Route path="/payment/return" element={<PaymentReturnPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contact" element={<ContactPage />} />
