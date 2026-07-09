@@ -1,5 +1,6 @@
 import PageHeader from "../components/PageHeader";
 import BookingForm from "../components/BookingForm";
+import BookingFAQ from "../components/BookingFAQ";
 import InternalLinksSection from "../components/InternalLinksSection";
 import SEO from "../components/SEO";
 
@@ -35,6 +36,7 @@ export default function BookingPage() {
         subtitle="Choose the service you need, reserve your preferred appointment time, and continue to secure checkout when payment is required."
       />
       <BookingForm />
+      <BookingFAQ />
       <InternalLinksSection
         title="Helpful planning links"
         description="Use these pages to choose the right service and prepare your travel request."
