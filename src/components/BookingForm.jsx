@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Container from "./Container";
 import { serviceSummary } from "../utils/serviceDisplay";
 
@@ -38,6 +38,7 @@ function formatPrice(price) {
 
 export default function BookingForm() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const requestedServiceId = searchParams.get("serviceId") || "";
 
   const [services, setServices] = useState([]);
@@ -166,16 +167,13 @@ export default function BookingForm() {
 
       if (data.checkoutUrl || data.authorizationUrl) {
         setSubmitMessage(
-          "Your appointment request has been received. If payment is required, you will now continue to secure checkout. Our team will also contact you by phone or WhatsApp."
+          "Your appointment request has been received. If payment is required, you will now continue to secure checkout."
         );
         window.location.href = data.checkoutUrl || data.authorizationUrl;
         return;
       }
 
-      setSubmitMessage(
-        data.message ||
-          "Your appointment request has been received. Our team will contact you by phone or WhatsApp with the next steps."
-      );
+      navigate(`/booking/thank-you${data.bookingId ? `?bookingId=${encodeURIComponent(data.bookingId)}` : ""}`);
     } catch (err) {
       setSubmitError(err.message || "Could not create booking.");
     } finally {
