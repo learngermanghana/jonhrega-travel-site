@@ -7,12 +7,12 @@ export default function AboutPage() {
     <>
       <SEO
         title="About Jonhrega"
-        description="Learn about Jonhrega Travel and Tours, based in Accra with licensed travel support."
+        description="Learn about Jonhrega Travel and Tours, a licensed Accra travel company offering visa, flight, tour, insurance, and appointment-based travel support."
         path="/about"
       />
       <PageHeader
         title="About Us"
-        subtitle="We are based in Accra and provide travel and visa support for individuals and organizations."
+        subtitle="Licensed travel support in Accra for visa preparation, flights, study abroad guidance, insurance, tours, and appointment-based travel assistance."
       />
       <About />
     </>
