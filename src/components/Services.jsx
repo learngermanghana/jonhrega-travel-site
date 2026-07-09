@@ -1,33 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container";
-
-function formatPrice(price) {
-  const amount = Number(price);
-  if (!Number.isFinite(amount) || amount <= 0) return "Contact for price";
-
-  return new Intl.NumberFormat("en-GH", {
-    style: "currency",
-    currency: "GHS",
-    maximumFractionDigits: amount % 1 === 0 ? 0 : 2
-  }).format(amount);
-}
-
-function makeContactLink(service) {
-  const serviceName = encodeURIComponent(service.name || "Travel service");
-  const topic = encodeURIComponent(`Question about ${service.name || "a travel service"}`);
-  return `/contact?service=${serviceName}&topic=${topic}`;
-}
+import { formatPrice, servicePath, serviceSummary } from "../utils/serviceDisplay";
 
 function ServiceImage({ service }) {
-  const [hidden, setHidden] = useState(!service.imageUrl);
+  const imageUrl = service.imageUrl || service.imageUrls?.[0] || "";
+  const [hidden, setHidden] = useState(!imageUrl);
 
   return (
     <div className="serviceCard__media">
       {!hidden && (
         <img
-          src={service.imageUrl}
+          src={imageUrl}
           alt={service.imageAlt || service.name}
+          loading="lazy"
           onError={() => setHidden(true)}
         />
       )}
@@ -46,7 +32,7 @@ function ServiceCard({ service }) {
           {service.brand && <span>{service.brand}</span>}
         </div>
         <h3 className="serviceCard__title">{service.name}</h3>
-        <p className="serviceCard__text">{service.description}</p>
+        <p className="serviceCard__text">{serviceSummary(service.description, 145)}</p>
         <div className="serviceCard__priceRow">
           <span>Service fee</span>
           <strong>{formatPrice(service.price)}</strong>
@@ -55,8 +41,8 @@ function ServiceCard({ service }) {
           <Link className="btn btn--small" to={`/booking?serviceId=${encodeURIComponent(service.id)}`}>
             Book Appointment
           </Link>
-          <Link className="textLink" to={makeContactLink(service)}>
-            Ask a question
+          <Link className="textLink" to={servicePath(service)}>
+            Read more
           </Link>
         </div>
       </div>
@@ -128,7 +114,7 @@ export default function Services() {
           <div>
             <h2>Choose Your Travel Service</h2>
             <p>
-              Browse our current service list, compare what fits your travel need, and book an appointment with our team when you are ready.
+              Browse our current service list, compare what fits your travel need, and open any service to read the full details before booking.
             </p>
           </div>
           <div className="section__actions">
