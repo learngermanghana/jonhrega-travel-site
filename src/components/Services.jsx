@@ -74,13 +74,13 @@ export default function Services() {
         const data = await response.json().catch(() => ({}));
 
         if (!response.ok || data.ok === false) {
-          throw new Error(data.message || "Could not load services from Sedifex.");
+          throw new Error(data.message || "Could not load services right now.");
         }
 
         setServices(Array.isArray(data.services) ? data.services : []);
       } catch (err) {
         if (err.name !== "AbortError") {
-          setError(err.message || "Could not load services from Sedifex.");
+          setError(err.message || "Could not load services right now.");
         }
       } finally {
         if (!controller.signal.aborted) setLoading(false);
@@ -114,9 +114,9 @@ export default function Services() {
       <Container>
         <div className="section__head section__head--split">
           <div>
-            <h2>Services from Sedifex</h2>
+            <h2>Choose Your Travel Service</h2>
             <p>
-              Browse the live Jonhrega service catalog from Sedifex. Choose a service, pick an appointment time, and continue to secure checkout when payment is required.
+              Browse our current service list, compare what fits your travel need, and book an appointment with our team when you are ready.
             </p>
           </div>
           <div className="section__actions">
@@ -141,18 +141,18 @@ export default function Services() {
           </label>
           <div className="serviceFilter__status">
             <span>Catalog source</span>
-            <strong>Sedifex live catalog</strong>
+            <strong>Current online services</strong>
           </div>
         </div>
 
         {loading && (
           <div className="servicesGrid">
-            {["Loading services", "Checking prices", "Preparing bookings"].map((item) => (
+            {["Loading services", "Checking available options", "Preparing appointment links"].map((item) => (
               <div className="serviceCard serviceCard--placeholder" key={item}>
                 <div className="serviceCard__mediaFallback" />
                 <div className="serviceCard__body">
                   <h3 className="serviceCard__title">{item}</h3>
-                  <p className="serviceCard__text">Please wait while we connect to Sedifex.</p>
+                  <p className="serviceCard__text">Please wait while we load the latest service list.</p>
                 </div>
               </div>
             ))}
@@ -161,7 +161,7 @@ export default function Services() {
 
         {!loading && error && (
           <div className="emptyState">
-            <h3>Service catalog setup needed</h3>
+            <h3>Service list is not available</h3>
             <p>{error}</p>
             <Link className="btn" to="/contact">Contact Jonhrega</Link>
           </div>
