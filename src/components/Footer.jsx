@@ -7,13 +7,14 @@ export default function Footer() {
 
   return (
     <footer className="footer">
-      <Container className="footer__inner">
+      <Container className="footer__inner footer__inner--extended">
         <div>
           <div className="footer__brand">{company.name}</div>
           <div className="footer__sub">
             {company.licensedNote} • {company.licenseNumberPlaceholder}
           </div>
           <div className="footer__tiny">© {year} {company.name}. All rights reserved.</div>
+          <div className="footer__powered">Powered by Sedifex</div>
         </div>
 
         <div className="footer__links">
@@ -22,6 +23,8 @@ export default function Footer() {
           <Link to="/services">Services</Link>
           <Link to="/booking">Booking</Link>
           <Link to="/blog">Blog</Link>
+          <Link to="/terms">Terms of Service</Link>
+          <Link to="/privacy">Privacy Policy</Link>
         </div>
       </Container>
     </footer>
