@@ -19,9 +19,9 @@ export default function Footer() {
         <div className="footer__links">
           <a href={"mailto:" + company.email}>Email</a>
           <a href={"tel:" + company.phones[0].value}>Call</a>
-          <Link to="/tours">Tours</Link>
+          <Link to="/services">Services</Link>
+          <Link to="/booking">Booking</Link>
           <Link to="/blog">Blog</Link>
-          <Link to="/assessment">Assessment</Link>
         </div>
       </Container>
     </footer>
