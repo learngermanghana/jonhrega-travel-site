@@ -56,12 +56,55 @@ function isService(item) {
   return itemType === "service" || type === "SERVICE";
 }
 
+function getImageCandidate(value) {
+  if (!value) return null;
+  if (typeof value === "string") return value;
+  if (typeof value === "object") {
+    return (
+      value.url ||
+      value.src ||
+      value.href ||
+      value.downloadURL ||
+      value.publicUrl ||
+      value.public_url ||
+      value.imageUrl ||
+      null
+    );
+  }
+  return null;
+}
+
+function collectImageUrls(item) {
+  const candidates = [
+    item.imageUrl,
+    item.image,
+    item.thumbnailUrl,
+    item.thumbnail,
+    item.photoUrl,
+    item.photo,
+    item.coverImage,
+    item.coverImageUrl,
+    item.primaryImage,
+    item.primaryImageUrl,
+    ...(Array.isArray(item.imageUrls) ? item.imageUrls : []),
+    ...(Array.isArray(item.images) ? item.images : []),
+    ...(Array.isArray(item.photos) ? item.photos : []),
+    ...(Array.isArray(item.media) ? item.media : [])
+  ];
+
+  return Array.from(
+    new Set(
+      candidates
+        .map(getImageCandidate)
+        .filter(Boolean)
+        .map((url) => String(url).trim())
+        .filter((url) => url.length > 0)
+    )
+  );
+}
+
 function normalizeService(item) {
-  const imageUrls = Array.isArray(item.imageUrls)
-    ? item.imageUrls.filter(Boolean)
-    : item.imageUrl
-      ? [item.imageUrl]
-      : [];
+  const imageUrls = collectImageUrls(item);
 
   return {
     id: item.id || item.serviceId || item.itemId || item.item_id || item.name,
@@ -76,9 +119,9 @@ function normalizeService(item) {
     stockCount: item.stockCount ?? null,
     itemType: item.itemType || item.item_type || "service",
     type: item.type || "SERVICE",
-    imageUrl: item.imageUrl || imageUrls[0] || null,
+    imageUrl: imageUrls[0] || null,
     imageUrls,
-    imageAlt: item.imageAlt || item.name || item.serviceName || "Jonhrega Travel and Tours service",
+    imageAlt: item.imageAlt || item.alt || item.name || item.serviceName || "Jonhrega Travel and Tours service",
     updatedAt: item.updatedAt || null
   };
 }
