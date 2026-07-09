@@ -1,6 +1,7 @@
 import HomeOffers from "../components/HomeOffers";
 import TrustBadges from "../components/TrustBadges";
 import Testimonials from "../components/Testimonials";
+import PopularServices from "../components/PopularServices";
 import Services from "../components/Services";
 import About from "../components/About";
 import Contact from "../components/Contact";
@@ -26,6 +27,7 @@ export default function Home() {
         ]}
       />
       <HomeOffers />
+      <PopularServices />
       <TrustBadges />
       <Testimonials />
       <Services />
