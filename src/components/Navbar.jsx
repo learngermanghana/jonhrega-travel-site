@@ -7,7 +7,6 @@ const links = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
   { label: "Tours", to: "/tours" },
-  { label: "Booking", to: "/booking" },
   { label: "Blog", to: "/blog" },
   { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" }
@@ -28,18 +27,18 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <nav className="nav__links">
+        <nav className="nav__links" aria-label="Main navigation">
           {links.map((l) => (
             <NavLink key={l.to} to={l.to} className={navClass}>
               {l.label}
             </NavLink>
           ))}
-          <Link className="btn btn--small" to="/booking">Book Appointment Now</Link>
+          <Link className="btn btn--small" to="/booking">Book Appointment</Link>
         </nav>
 
         <button
           className="nav__toggle"
-          aria-label="Open menu"
+          aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open ? "true" : "false"}
           onClick={() => setOpen((v) => !v)}
         >
@@ -60,7 +59,7 @@ export default function Navbar() {
                 {l.label}
               </NavLink>
             ))}
-            <Link className="btn" to="/booking" onClick={() => setOpen(false)}>Book Appointment Now</Link>
+            <Link className="btn" to="/booking" onClick={() => setOpen(false)}>Book Appointment</Link>
           </Container>
         </div>
       )}
