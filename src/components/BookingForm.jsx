@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Container from "./Container";
+import { serviceSummary } from "../utils/serviceDisplay";
 
 const appointmentTimes = [
   "09:00",
@@ -51,7 +52,6 @@ export default function BookingForm() {
     serviceId: requestedServiceId,
     bookingDate: todayIsoDate(),
     bookingTime: "10:00",
-    quantity: 1,
     name: "",
     email: "",
     phone: "",
@@ -104,9 +104,9 @@ export default function BookingForm() {
     [form.serviceId, services]
   );
 
-  const quantity = Math.max(1, Number(form.quantity) || 1);
+  const quantity = 1;
   const unitPrice = Number(selectedService?.price || 0);
-  const paymentAmount = Number.isFinite(unitPrice) && unitPrice > 0 ? unitPrice * quantity : 0;
+  const paymentAmount = Number.isFinite(unitPrice) && unitPrice > 0 ? unitPrice : 0;
 
   function updateField(name, value) {
     setForm((current) => ({ ...current, [name]: value }));
@@ -150,6 +150,8 @@ export default function BookingForm() {
             pageUrl: window.location.href,
             timezone: "Africa/Accra",
             locale: "en-GB",
+            serviceAppointment: true,
+            quantityHidden: true,
             termsAccepted: true,
             termsAcceptedAt: new Date().toISOString()
           }
@@ -299,17 +301,6 @@ export default function BookingForm() {
                 />
               </label>
 
-              <label className="field">
-                <span>Quantity</span>
-                <input
-                  type="number"
-                  min="1"
-                  value={form.quantity}
-                  onChange={(e) => updateField("quantity", e.target.value)}
-                  required
-                />
-              </label>
-
               <label className="field field--wide">
                 <span>Notes / request details</span>
                 <textarea
@@ -379,7 +370,7 @@ export default function BookingForm() {
                   <div className="kv__v">{paymentAmount > 0 ? formatPrice(paymentAmount) : formatPrice(0)}</div>
                 </div>
                 <p className="tiny">
-                  {selectedService.description}
+                  {serviceSummary(selectedService.description, 160)}
                 </p>
               </>
             ) : (
