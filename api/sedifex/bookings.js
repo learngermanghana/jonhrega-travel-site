@@ -140,7 +140,7 @@ async function createBookingAndCheckout(req, res, config) {
   const customer = body.customer || {};
 
   if (!serviceId && !slotId) {
-    return sendJson(res, 400, { ok: false, message: "Select a Sedifex service before booking." });
+    return sendJson(res, 400, { ok: false, message: "Select a service before booking." });
   }
 
   if (!body.bookingDate || !body.bookingTime) {
@@ -203,7 +203,7 @@ async function createBookingAndCheckout(req, res, config) {
   if (!bookingResponse.ok || bookingData.ok === false) {
     return sendJson(res, bookingResponse.status || 502, {
       ok: false,
-      message: bookingData.message || bookingData.error || "Could not create booking in Sedifex.",
+      message: bookingData.message || bookingData.error || "Could not create booking.",
       details: bookingData
     });
   }
@@ -215,7 +215,7 @@ async function createBookingAndCheckout(req, res, config) {
       ok: true,
       bookingId,
       paymentRequired: false,
-      message: "Booking created. Staff will confirm payment or next steps."
+      message: "Appointment created. Staff will confirm payment or next steps."
     });
   }
 
@@ -302,7 +302,7 @@ export default async function handler(req, res) {
     return sendJson(res, 500, {
       ok: false,
       message:
-        "Sedifex booking integration is not configured. Add SEDIFEX_BOOKING_TARGET_STORE_ID and SEDIFEX_BOOKING_API_KEY in the website environment."
+        "The online booking system is not configured yet. Please contact Jonhrega Travel and Tours for assistance."
     });
   }
 
@@ -315,7 +315,7 @@ export default async function handler(req, res) {
   } catch (error) {
     return sendJson(res, 500, {
       ok: false,
-      message: error instanceof Error ? error.message : "Sedifex booking request failed."
+      message: error instanceof Error ? error.message : "Booking request failed."
     });
   }
 }
