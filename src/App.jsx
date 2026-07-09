@@ -11,6 +11,7 @@ import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import ToursPage from "./pages/ToursPage";
 import BookingPage from "./pages/BookingPage";
+import BookingThankYouPage from "./pages/BookingThankYouPage";
 import PaymentReturnPage from "./pages/PaymentReturnPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
           <Route path="/tours" element={<ToursPage />} />
           <Route path="/booking" element={<BookingPage />} />
+          <Route path="/booking/thank-you" element={<BookingThankYouPage />} />
           <Route path="/assessment" element={<Navigate to="/booking" replace />} />
           <Route path="/payment/return" element={<PaymentReturnPage />} />
           <Route path="/terms" element={<TermsPage />} />
