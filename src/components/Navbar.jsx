@@ -7,7 +7,7 @@ const links = [
   { label: "Home", to: "/" },
   { label: "Services", to: "/services" },
   { label: "Tours", to: "/tours" },
-  { label: "Assessment", to: "/assessment" },
+  { label: "Booking", to: "/booking" },
   { label: "Blog", to: "/blog" },
   { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" }
@@ -34,7 +34,7 @@ export default function Navbar() {
               {l.label}
             </NavLink>
           ))}
-          <Link className="btn btn--small" to="/assessment">Book Consultation Appointment Now</Link>
+          <Link className="btn btn--small" to="/booking">Book Appointment Now</Link>
         </nav>
 
         <button
@@ -60,7 +60,7 @@ export default function Navbar() {
                 {l.label}
               </NavLink>
             ))}
-            <Link className="btn" to="/assessment" onClick={() => setOpen(false)}>Book Consultation Appointment Now</Link>
+            <Link className="btn" to="/booking" onClick={() => setOpen(false)}>Book Appointment Now</Link>
           </Container>
         </div>
       )}
