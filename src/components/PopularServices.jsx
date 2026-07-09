@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container";
+import { formatPrice, servicePath, serviceSummary } from "../utils/serviceDisplay";
 
-function formatPrice(price) {
-  const amount = Number(price);
-  if (!Number.isFinite(amount) || amount <= 0) return "Contact for price";
+function PopularServiceImage({ service }) {
+  const imageUrl = service.imageUrl || service.imageUrls?.[0] || "";
 
-  return new Intl.NumberFormat("en-GH", {
-    style: "currency",
-    currency: "GHS",
-    maximumFractionDigits: amount % 1 === 0 ? 0 : 2
-  }).format(amount);
+  return (
+    <div className="popularServiceCard__media">
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt={service.imageAlt || service.name}
+          loading="lazy"
+          onError={(e) => { e.currentTarget.style.display = "none"; }}
+        />
+      )}
+      <div className="popularServiceCard__mediaFallback" aria-hidden="true" />
+    </div>
+  );
 }
 
 export default function PopularServices() {
@@ -69,25 +77,34 @@ export default function PopularServices() {
             if (loading) {
               return (
                 <div className="popularServiceCard" key={service}>
-                  <div className="popularServiceCard__label">Loading</div>
-                  <h3>Preparing service</h3>
-                  <p>Please wait while we load current services.</p>
+                  <div className="popularServiceCard__media">
+                    <div className="popularServiceCard__mediaFallback" aria-hidden="true" />
+                  </div>
+                  <div className="popularServiceCard__body">
+                    <div className="popularServiceCard__label">Loading</div>
+                    <h3>Preparing service</h3>
+                    <p>Please wait while we load current services.</p>
+                  </div>
                 </div>
               );
             }
 
             return (
-              <div className="popularServiceCard" key={service.id}>
-                <div className="popularServiceCard__label">{service.category || "Travel Service"}</div>
-                <h3>{service.name}</h3>
-                <p>{service.description}</p>
-                <div className="popularServiceCard__footer">
-                  <strong>{formatPrice(service.price)}</strong>
-                  <Link className="btn btn--small" to={`/booking?serviceId=${encodeURIComponent(service.id)}`}>
-                    Book Now
-                  </Link>
+              <article className="popularServiceCard" key={service.id}>
+                <PopularServiceImage service={service} />
+                <div className="popularServiceCard__body">
+                  <div className="popularServiceCard__label">{service.category || "Travel Service"}</div>
+                  <h3>{service.name}</h3>
+                  <p>{serviceSummary(service.description, 125)}</p>
+                  <div className="popularServiceCard__footer">
+                    <strong>{formatPrice(service.price)}</strong>
+                    <Link className="btn btn--small" to={`/booking?serviceId=${encodeURIComponent(service.id)}`}>
+                      Book Now
+                    </Link>
+                  </div>
+                  <Link className="textLink" to={servicePath(service)}>Read more</Link>
                 </div>
-              </div>
+              </article>
             );
           })}
         </div>
