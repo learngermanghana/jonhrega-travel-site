@@ -15,13 +15,15 @@
   grid-template-rows: 180px 1fr;
 }
 
-.serviceCard__media{
+.serviceCard__media,
+.popularServiceCard__media{
   position: relative;
   min-height: 180px;
   overflow: hidden;
 }
 
-.serviceCard__media img{
+.serviceCard__media img,
+.popularServiceCard__media img{
   position: relative;
   z-index: 2;
   width: 100%;
@@ -30,7 +32,8 @@
   display: block;
 }
 
-.serviceCard__mediaFallback{
+.serviceCard__mediaFallback,
+.popularServiceCard__mediaFallback{
   position: absolute;
   inset: 0;
   background:
@@ -48,7 +51,8 @@
   min-height: 180px;
 }
 
-.serviceCard__body{
+.serviceCard__body,
+.popularServiceCard__body{
   padding: 1.05rem;
   display: grid;
   gap: .65rem;
@@ -63,7 +67,9 @@
   flex-wrap: wrap;
 }
 
-.serviceCard__meta span{
+.serviceCard__meta span,
+.popularServiceCard__label,
+.serviceDetailCard__meta span{
   border-radius: 999px;
   border: 1px solid rgba(0,119,200,.22);
   background: rgba(0,119,200,.10);
@@ -113,14 +119,16 @@
   align-items: center;
 }
 
-.serviceCard__actions .textLink{
+.serviceCard__actions .textLink,
+.popularServiceCard .textLink{
   color: rgba(11,31,58,.70);
   font-weight: 900;
   text-decoration: none;
   padding: .55rem .2rem;
 }
 
-.serviceCard__actions .textLink:hover{
+.serviceCard__actions .textLink:hover,
+.popularServiceCard .textLink:hover{
   color: var(--brand);
   text-decoration: underline;
 }
@@ -162,33 +170,31 @@
   border-radius: 22px;
   border: 1px solid rgba(11,31,58,.12);
   background: rgba(255,255,255,.58);
-  padding: 1.1rem;
+  overflow: hidden;
   box-shadow: 0 10px 22px rgba(0,0,0,.18);
   display: grid;
-  gap: .65rem;
+  grid-template-rows: 170px 1fr;
+}
+
+.popularServiceCard__media{
+  min-height: 170px;
 }
 
 .popularServiceCard__label{
   display: inline-flex;
   width: fit-content;
-  border-radius: 999px;
-  border: 1px solid rgba(0,119,200,.22);
-  background: rgba(0,119,200,.10);
-  color: rgba(11,31,58,.74);
-  font-size: .78rem;
-  font-weight: 800;
-  padding: .24rem .58rem;
 }
 
 .popularServiceCard h3{
   margin: 0;
   font-size: 1.1rem;
+  line-height: 1.25;
 }
 
 .popularServiceCard p{
   margin: 0;
   color: rgba(11,31,58,.76);
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
 .popularServiceCard__footer{
@@ -233,7 +239,8 @@
   margin-top: .2rem;
 }
 
-.bookingSummary{
+.bookingSummary,
+.serviceDetailSidebar{
   position: sticky;
   top: 110px;
 }
@@ -351,6 +358,58 @@
   line-height: 1.75;
 }
 
+.serviceDetailLayout{
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(290px, .75fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.serviceDetailCard{
+  overflow: hidden;
+}
+
+.serviceDetailCard__image{
+  width: 100%;
+  max-height: 380px;
+  object-fit: cover;
+  border-radius: 20px;
+  border: 1px solid rgba(11,31,58,.12);
+  margin-bottom: 1rem;
+}
+
+.serviceDetailCard__meta{
+  display: flex;
+  gap: .45rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.serviceDetailCard h2{
+  margin: 0 0 .75rem;
+}
+
+.serviceDetailText{
+  display: grid;
+  gap: .85rem;
+}
+
+.serviceDetailText p{
+  margin: 0;
+  color: rgba(11,31,58,.78);
+  line-height: 1.8;
+}
+
+.serviceDetailText__bullet{
+  padding-left: .5rem;
+  border-left: 3px solid rgba(0,119,200,.25);
+}
+
+.serviceDetailSidebar p{
+  color: rgba(11,31,58,.76);
+  line-height: 1.65;
+}
+
 .footer__inner--extended{
   align-items: flex-start;
 }
@@ -403,11 +462,45 @@
 
   .serviceFilter,
   .bookingLayout,
-  .footerGrid{
+  .footerGrid,
+  .serviceDetailLayout{
     grid-template-columns: 1fr;
   }
 
-  .bookingSummary{
+  .bookingSummary,
+  .serviceDetailSidebar{
     position: static;
+  }
+}
+
+@media (max-width: 720px){
+  .serviceCard,
+  .popularServiceCard{
+    border-radius: 18px;
+  }
+
+  .serviceCard__media,
+  .popularServiceCard__media{
+    min-height: 150px;
+  }
+
+  .popularServiceCard{
+    grid-template-rows: 150px 1fr;
+  }
+
+  .popularServiceCard__footer,
+  .serviceCard__actions{
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .serviceCard__actions .textLink,
+  .popularServiceCard .textLink{
+    text-align: center;
+  }
+
+  .serviceDetailCard__image{
+    max-height: 240px;
+    border-radius: 16px;
   }
 }
