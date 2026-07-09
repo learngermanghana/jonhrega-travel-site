@@ -11,6 +11,8 @@ import ContactPage from "./pages/ContactPage";
 import ToursPage from "./pages/ToursPage";
 import BookingPage from "./pages/BookingPage";
 import PaymentReturnPage from "./pages/PaymentReturnPage";
+import TermsPage from "./pages/TermsPage";
+import PrivacyPage from "./pages/PrivacyPage";
 import BlogPage from "./pages/BlogPage";
 
 export default function App() {
@@ -27,6 +29,8 @@ export default function App() {
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/assessment" element={<Navigate to="/booking" replace />} />
           <Route path="/payment/return" element={<PaymentReturnPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contact" element={<ContactPage />} />
