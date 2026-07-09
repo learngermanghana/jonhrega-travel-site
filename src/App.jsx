@@ -6,6 +6,7 @@ import MobileActionBar from "./components/MobileActionBar";
 
 import Home from "./pages/Home";
 import ServicesPage from "./pages/ServicesPage";
+import ServiceDetailPage from "./pages/ServiceDetailPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
 import ToursPage from "./pages/ToursPage";
@@ -24,6 +25,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/services" element={<ServicesPage />} />
+          <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
           <Route path="/tours" element={<ToursPage />} />
           <Route path="/booking" element={<BookingPage />} />
           <Route path="/assessment" element={<Navigate to="/booking" replace />} />
