@@ -29,6 +29,15 @@ export default function PaymentReturnPage() {
             <p>
               Your appointment request has been created and your checkout return was received. Please do not submit the same booking again unless our team asks you to.
             </p>
+            <div className="callout paymentReturnNotice">
+              <div className="callout__title">Important payment note</div>
+              <div className="callout__text">
+                Payment is not confirmed by this page alone. Our system verifies the payment securely before your appointment is marked as paid.
+              </div>
+              <div className="callout__hint">
+                If payment is successful, our team will follow up with your appointment details, document requirements, and next steps.
+              </div>
+            </div>
             {reference && (
               <p className="tiny">
                 Payment reference: <strong>{reference}</strong>
