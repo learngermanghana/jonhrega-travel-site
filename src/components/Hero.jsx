@@ -19,11 +19,11 @@ export default function Hero() {
           </p>
 
           <div className="hero__cta">
-            <Link className="btn" to="/assessment">
-              Hurry!! Book Consultation Now
+            <Link className="btn" to="/booking">
+              Hurry!! Book Appointment Now
             </Link>
             <Link className="btn btn--ghost" to="/services">
-              Explore Our Services
+              Explore Live Services
             </Link>
           </div>
         </div>
