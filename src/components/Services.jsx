@@ -55,8 +55,8 @@ function ServiceCard({ service }) {
           <Link className="btn btn--small" to={`/booking?serviceId=${encodeURIComponent(service.id)}`}>
             Book Appointment
           </Link>
-          <Link className="btn btn--ghost btn--small" to={makeContactLink(service)}>
-            Ask Question
+          <Link className="textLink" to={makeContactLink(service)}>
+            Ask a question
           </Link>
         </div>
       </div>
