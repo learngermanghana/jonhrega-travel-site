@@ -38,7 +38,7 @@ export function serviceSchemas() {
     areaServed: "Ghana",
     availableChannel: {
       "@type": "ServiceChannel",
-      serviceUrl: absUrl("/assessment")
+      serviceUrl: absUrl("/booking")
     },
     description: service.items.join(", ")
   }));
@@ -51,10 +51,10 @@ export function faqSchema() {
     mainEntity: [
       {
         "@type": "Question",
-        name: "How do I start a visa assessment?",
+        name: "How do I book a travel service appointment?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Go to the visa assessment page, fill in your travel details, and submit directly by email for quick guidance."
+          text: "Go to the booking page, choose a live service from Sedifex, select a preferred date and time, then submit your appointment request."
         }
       },
       {
@@ -67,10 +67,10 @@ export function faqSchema() {
       },
       {
         "@type": "Question",
-        name: "Can I request tours and flight bookings?",
+        name: "Can I pay online after booking?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Yes. You can request tours, flight booking, and custom itinerary planning through the consultation form."
+          text: "When a Sedifex service has a price, the booking flow sends customers to secure Paystack checkout after the booking is created."
         }
       }
     ]
