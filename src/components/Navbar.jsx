@@ -34,7 +34,7 @@ export default function Navbar() {
               {l.label}
             </NavLink>
           ))}
-          <Link className="btn btn--small" to="/assessment">Start Now</Link>
+          <Link className="btn btn--small" to="/assessment">Book Consultation Appointment Now</Link>
         </nav>
 
         <button
@@ -60,7 +60,7 @@ export default function Navbar() {
                 {l.label}
               </NavLink>
             ))}
-            <Link className="btn" to="/assessment" onClick={() => setOpen(false)}>Start Now</Link>
+            <Link className="btn" to="/assessment" onClick={() => setOpen(false)}>Book Consultation Appointment Now</Link>
           </Container>
         </div>
       )}

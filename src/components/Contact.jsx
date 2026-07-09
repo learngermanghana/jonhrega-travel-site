@@ -1,4 +1,4 @@
-﻿import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Container from "./Container";
 import { company } from "../data/company";
@@ -53,7 +53,7 @@ export default function Contact() {
       <Container>
         <div className="section__head">
           <h2>Contact</h2>
-          <p>Reach us by phone, email, or send a quick request below.</p>
+          <p>Reach us by phone, email, WhatsApp, or visit our office.</p>
         </div>
 
         <div className="twoCol twoCol--contact">
@@ -63,7 +63,7 @@ export default function Contact() {
             <div className="kv">
               <div className="kv__k">Email</div>
               <div className="kv__v">
-                <a href={"mailto:" + company.email}>{company.email}</a>
+                <a href={"mailto:" + company.email}>{company.displayEmail}</a>
               </div>
             </div>
 
@@ -79,10 +79,29 @@ export default function Contact() {
             </div>
 
             <div className="kv">
-              <div className="kv__k">Digital Address</div>
+              <div className="kv__k">Office</div>
               <div className="kv__v">
-                {company.address.digital.map((l) => <div key={l}>{l}</div>)}
+                {company.address.office.map((l) => <div key={l}>{l}</div>)}
               </div>
+            </div>
+
+            <div className="kv">
+              <div className="kv__k">WhatsApp</div>
+              <div className="kv__v">
+                <a href={"https://wa.me/" + company.whatsapp.value.replace("+", "")}>{company.whatsapp.raw}</a>
+              </div>
+            </div>
+
+            <div className="kv">
+              <div className="kv__k">Opening Hours</div>
+              <div className="kv__v">
+                {company.openingHours.map((l) => <div key={l}>{l}</div>)}
+              </div>
+            </div>
+
+            <div className="kv">
+              <div className="kv__k">Payments</div>
+              <div className="kv__v">{company.paymentNotice}</div>
             </div>
 
             <div className="kv">
