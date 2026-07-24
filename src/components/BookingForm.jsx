@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Container from "./Container";
 import { serviceSummary } from "../utils/serviceDisplay";
+import { fetchSedifexServices } from "../utils/sedifexServices";
 
 const appointmentTimes = [
   "09:00",
@@ -67,17 +68,7 @@ export default function BookingForm() {
       setServiceError("");
 
       try {
-        const response = await fetch("/api/sedifex/products", {
-          signal: controller.signal,
-          headers: { Accept: "application/json" }
-        });
-        const data = await response.json().catch(() => ({}));
-
-        if (!response.ok || data.ok === false) {
-          throw new Error(data.message || "Could not load services right now.");
-        }
-
-        const nextServices = Array.isArray(data.services) ? data.services : [];
+        const nextServices = await fetchSedifexServices({ signal: controller.signal });
         setServices(nextServices);
 
         setForm((current) => {
