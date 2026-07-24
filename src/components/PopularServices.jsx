@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container";
 import { formatPrice, servicePath, serviceSummary } from "../utils/serviceDisplay";
+import { fetchSedifexServices } from "../utils/sedifexServices";
 
 function PopularServiceImage({ service }) {
   const imageUrl = service.imageUrl || service.imageUrls?.[0] || "";
@@ -31,17 +32,8 @@ export default function PopularServices() {
 
     async function loadPopularServices() {
       try {
-        const response = await fetch("/api/sedifex/products", {
-          signal: controller.signal,
-          headers: { Accept: "application/json" }
-        });
-        const data = await response.json().catch(() => ({}));
-
-        if (!response.ok || data.ok === false) {
-          throw new Error(data.message || "Could not load popular services.");
-        }
-
-        setServices((Array.isArray(data.services) ? data.services : []).slice(0, 6));
+        const nextServices = await fetchSedifexServices({ signal: controller.signal });
+        setServices(nextServices.slice(0, 6));
       } catch (err) {
         if (err.name !== "AbortError") {
           setError(err.message || "Could not load popular services.");

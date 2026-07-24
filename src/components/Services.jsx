@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container";
 import { formatPrice, servicePath, serviceSummary } from "../utils/serviceDisplay";
+import { fetchSedifexServices } from "../utils/sedifexServices";
 
 function ServiceImage({ service }) {
   const imageUrl = service.imageUrl || service.imageUrls?.[0] || "";
@@ -65,17 +66,8 @@ export default function Services() {
       setError("");
 
       try {
-        const response = await fetch("/api/sedifex/products", {
-          signal: controller.signal,
-          headers: { Accept: "application/json" }
-        });
-        const data = await response.json().catch(() => ({}));
-
-        if (!response.ok || data.ok === false) {
-          throw new Error(data.message || "Could not load services right now.");
-        }
-
-        setServices(Array.isArray(data.services) ? data.services : []);
+        const nextServices = await fetchSedifexServices({ signal: controller.signal });
+        setServices(nextServices);
       } catch (err) {
         if (err.name !== "AbortError") {
           setError(err.message || "Could not load services right now.");

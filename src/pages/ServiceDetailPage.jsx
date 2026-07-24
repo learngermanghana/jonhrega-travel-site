@@ -4,6 +4,7 @@ import Container from "../components/Container";
 import PageHeader from "../components/PageHeader";
 import SEO from "../components/SEO";
 import { findServiceByParam, formatPrice, serviceParagraphs } from "../utils/serviceDisplay";
+import { fetchSedifexServices } from "../utils/sedifexServices";
 
 export default function ServiceDetailPage() {
   const { serviceId } = useParams();
@@ -19,17 +20,8 @@ export default function ServiceDetailPage() {
       setError("");
 
       try {
-        const response = await fetch("/api/sedifex/products", {
-          signal: controller.signal,
-          headers: { Accept: "application/json" }
-        });
-        const data = await response.json().catch(() => ({}));
-
-        if (!response.ok || data.ok === false) {
-          throw new Error(data.message || "Could not load this service right now.");
-        }
-
-        setServices(Array.isArray(data.services) ? data.services : []);
+        const nextServices = await fetchSedifexServices({ signal: controller.signal });
+        setServices(nextServices);
       } catch (err) {
         if (err.name !== "AbortError") {
           setError(err.message || "Could not load this service right now.");

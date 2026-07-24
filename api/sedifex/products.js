@@ -1,9 +1,13 @@
 const DEFAULT_SEDIFEX_BASE_URL = "https://us-central1-sedifex-web.cloudfunctions.net";
+const PRODUCT_CACHE_TTL_MS = Number(process.env.SEDIFEX_PRODUCTS_CACHE_TTL_MS || 15 * 60 * 1000);
+const PRODUCT_CACHE_STALE_MS = Number(process.env.SEDIFEX_PRODUCTS_STALE_MS || 60 * 60 * 1000);
+
+let cachedProducts = null;
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
   res.setHeader("Content-Type", "application/json");
-  res.setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=300");
+  res.setHeader("Cache-Control", "public, max-age=300, s-maxage=900, stale-while-revalidate=3600");
   res.end(JSON.stringify(payload));
 }
 
@@ -163,6 +167,11 @@ export default async function handler(req, res) {
   const url = new URL("/v1IntegrationProducts", config.baseUrl);
   url.searchParams.set("storeId", config.storeId);
 
+  const now = Date.now();
+  if (cachedProducts && now - cachedProducts.savedAt <= PRODUCT_CACHE_TTL_MS) {
+    return sendJson(res, 200, { ...cachedProducts.payload, cached: true });
+  }
+
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -181,16 +190,20 @@ export default async function handler(req, res) {
 
     const services = collectServices(body);
 
-    return sendJson(res, 200, {
+    const payload = {
       ok: true,
       storeId: body.storeId || config.storeId,
       count: services.length,
-      services,
-      products: body.products || [],
-      publicProducts: body.publicProducts || [],
-      publicServices: body.publicServices || []
-    });
+      services
+    };
+    cachedProducts = { payload, savedAt: Date.now() };
+
+    return sendJson(res, 200, payload);
   } catch (error) {
+    if (cachedProducts && Date.now() - cachedProducts.savedAt <= PRODUCT_CACHE_STALE_MS) {
+      return sendJson(res, 200, { ...cachedProducts.payload, cached: true, stale: true });
+    }
+
     return sendJson(res, 500, {
       ok: false,
       message: error instanceof Error ? error.message : "Service list request failed."

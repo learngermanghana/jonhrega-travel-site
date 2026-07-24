@@ -1,9 +1,34 @@
 const DEFAULT_SEDIFEX_BASE_URL = "https://us-central1-sedifex-web.cloudfunctions.net";
+const BOOKING_RATE_LIMIT_WINDOW_MS = Number(process.env.BOOKING_RATE_LIMIT_WINDOW_MS || 10 * 60 * 1000);
+const BOOKING_RATE_LIMIT_MAX = Number(process.env.BOOKING_RATE_LIMIT_MAX || 5);
+
+const bookingAttempts = new Map();
 
 function sendJson(res, statusCode, payload) {
   res.statusCode = statusCode;
   res.setHeader("Content-Type", "application/json");
   res.end(JSON.stringify(payload));
+}
+
+function getClientIp(req) {
+  const forwardedFor = req.headers["x-forwarded-for"];
+  if (typeof forwardedFor === "string" && forwardedFor) return forwardedFor.split(",")[0].trim();
+  return req.socket?.remoteAddress || "unknown";
+}
+
+function checkBookingRateLimit(req) {
+  const now = Date.now();
+  const key = getClientIp(req);
+  const attempts = (bookingAttempts.get(key) || []).filter((time) => now - time < BOOKING_RATE_LIMIT_WINDOW_MS);
+
+  if (attempts.length >= BOOKING_RATE_LIMIT_MAX) {
+    bookingAttempts.set(key, attempts);
+    return false;
+  }
+
+  attempts.push(now);
+  bookingAttempts.set(key, attempts);
+  return true;
 }
 
 function getConfig(req) {
@@ -309,8 +334,22 @@ export default async function handler(req, res) {
   }
 
   try {
-    if (req.method === "GET") return await proxyReadBookings(req, res, config);
-    if (req.method === "POST") return await createBookingAndCheckout(req, res, config);
+    if (req.method === "GET") {
+      if (process.env.SEDIFEX_ALLOW_PUBLIC_BOOKING_READS !== "true") {
+        return sendJson(res, 405, { ok: false, message: "Public booking reads are disabled." });
+      }
+      return await proxyReadBookings(req, res, config);
+    }
+    if (req.method === "POST") {
+      if (!checkBookingRateLimit(req)) {
+        res.setHeader("Retry-After", String(Math.ceil(BOOKING_RATE_LIMIT_WINDOW_MS / 1000)));
+        return sendJson(res, 429, {
+          ok: false,
+          message: "Too many booking attempts. Please wait a few minutes and try again."
+        });
+      }
+      return await createBookingAndCheckout(req, res, config);
+    }
 
     res.setHeader("Allow", "GET, POST, OPTIONS");
     return sendJson(res, 405, { ok: false, message: "Method not allowed" });
