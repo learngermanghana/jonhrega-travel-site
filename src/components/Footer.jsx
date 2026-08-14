@@ -16,6 +16,18 @@ export default function Footer() {
           </div>
           <div className="footer__tiny">© {year} {company.name}. All rights reserved.</div>
           <div className="footer__powered">Powered by Sedifex</div>
+
+          <div className="footer__affiliation" aria-label="JATA affiliate membership">
+            <img
+              className="footer__affiliationLogo"
+              src="/images/john%20new%20pic.jpeg"
+              alt="JATA Overseas Allied Member logo"
+            />
+            <div>
+              <span className="footer__affiliationLabel">Affiliate member of</span>
+              <strong>Japan Association of Travel Agents (JATA)</strong>
+            </div>
+          </div>
         </div>
 
         <div className="footerBlock">
