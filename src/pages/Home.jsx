@@ -1,6 +1,7 @@
 import Hero from "../components/Hero";
 import HomeOffers from "../components/HomeOffers";
 import TrustBadges from "../components/TrustBadges";
+import JataAffiliation from "../components/JataAffiliation";
 import Testimonials from "../components/Testimonials";
 import PopularServices from "../components/PopularServices";
 import About from "../components/About";
@@ -30,6 +31,7 @@ export default function Home() {
       <HomeOffers />
       <PopularServices />
       <TrustBadges />
+      <JataAffiliation />
       <Testimonials />
       <About />
       <Contact />
