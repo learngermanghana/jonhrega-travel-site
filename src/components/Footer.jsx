@@ -20,7 +20,7 @@ export default function Footer() {
           <div className="footer__affiliation" aria-label="JATA affiliate membership">
             <img
               className="footer__affiliationLogo"
-              src="/images/john%20new%20pic.jpeg"
+              src="/images/john%20new%20pic%20(2).jpeg"
               alt="JATA Overseas Allied Member logo"
             />
             <div>
