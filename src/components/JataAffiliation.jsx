@@ -22,7 +22,7 @@ export default function JataAffiliation() {
           }}
         >
           <img
-            src="/images/john%20new%20pic%20(2).jpeg"
+            src="/images/894ad77a-2e20-4b2c-9c0f-81bc4f094a0c.jpeg"
             alt="JATA Overseas Allied Member logo"
             loading="lazy"
             style={{
