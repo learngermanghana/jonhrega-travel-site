@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import Container from "../components/Container";
 import PageHeader from "../components/PageHeader";
 import SEO from "../components/SEO";
-import { findServiceByParam, formatPrice, serviceParagraphs } from "../utils/serviceDisplay";
+import { findServiceByParam, formatDualPrice, serviceParagraphs } from "../utils/serviceDisplay";
 import { fetchSedifexServices } from "../utils/sedifexServices";
 
 export default function ServiceDetailPage() {
@@ -84,7 +84,7 @@ export default function ServiceDetailPage() {
       />
       <PageHeader
         title={service.name}
-        subtitle={`${service.category || "Travel Services"} • ${formatPrice(service.price)}`}
+        subtitle={`${service.category || "Travel Services"} • ${formatDualPrice(service)}`}
       />
 
       <section className="section">
@@ -104,7 +104,7 @@ export default function ServiceDetailPage() {
               <div className="serviceDetailCard__meta">
                 <span>{service.category || "Travel Services"}</span>
                 {service.brand && <span>{service.brand}</span>}
-                <span>{formatPrice(service.price)}</span>
+                <span>{formatDualPrice(service)}</span>
               </div>
 
               <h2>Service details</h2>
@@ -126,7 +126,7 @@ export default function ServiceDetailPage() {
               </p>
               <div className="kv">
                 <div className="kv__k">Service fee</div>
-                <div className="kv__v">{formatPrice(service.price)}</div>
+                <div className="kv__v">{formatDualPrice(service)}</div>
               </div>
               <div className="actions">
                 <Link className="btn" to={`/booking?serviceId=${encodeURIComponent(service.id)}`}>

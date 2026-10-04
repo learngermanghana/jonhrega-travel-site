@@ -149,6 +149,9 @@ function normalizeService(item) {
     price: typeof item.price === "number" ? item.price : Number(item.price || 0),
     priceMinor: item.priceMinor || null,
     currency: String(item.currency || "GHS").trim().toUpperCase() || "GHS",
+    priceGhs: item.priceGhs == null ? null : Number(item.priceGhs),
+    priceUsd: item.priceUsd == null ? null : Number(item.priceUsd),
+    exchangeRateUpdatedAt: item.exchangeRateUpdatedAt || null,
     stockCount: item.stockCount ?? null,
     itemType: item.itemType || item.item_type || "service",
     type: item.type || "SERVICE",
@@ -251,7 +254,8 @@ export default async function handler(req, res) {
       serviceCount: services.length,
       tourCount: tours.length,
       services,
-      tours
+      tours,
+      currencyConversion: body.currencyConversion || null
     };
     cachedProducts = { payload, savedAt: Date.now() };
 

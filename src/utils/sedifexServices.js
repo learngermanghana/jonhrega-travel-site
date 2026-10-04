@@ -1,17 +1,21 @@
-const CATALOG_CACHE_KEY = "jonhrega:sedifex-catalog:v2";
+const CATALOG_CACHE_KEY = "jonhrega:sedifex-catalog:v3";
 const CATALOG_CACHE_TTL_MS = 15 * 60 * 1000;
 
 let inFlightCatalogRequest = null;
 let memoryCatalogCache = null;
 
 function emptyCatalog() {
-  return { services: [], tours: [] };
+  return { services: [], tours: [], currencyConversion: null };
 }
 
 function normalizeCatalog(value) {
   const services = Array.isArray(value?.services) ? value.services : [];
   const tours = Array.isArray(value?.tours) ? value.tours : [];
-  return { services, tours };
+  const currencyConversion =
+    value?.currencyConversion && typeof value.currencyConversion === "object"
+      ? value.currencyConversion
+      : null;
+  return { services, tours, currencyConversion };
 }
 
 function readStoredCatalog() {

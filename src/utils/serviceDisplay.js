@@ -1,3 +1,5 @@
+import { formatDualPrice, formatMoney } from "./pricing";
+
 export function decodeEntities(value = "") {
   return String(value)
     .replace(/&nbsp;/gi, " ")
@@ -63,13 +65,8 @@ export function findServiceByParam(services, param) {
   return services.find((service) => String(service.id) === decoded) || null;
 }
 
-export function formatPrice(price) {
-  const amount = Number(price);
-  if (!Number.isFinite(amount) || amount <= 0) return "Contact for price";
-
-  return new Intl.NumberFormat("en-GH", {
-    style: "currency",
-    currency: "GHS",
-    maximumFractionDigits: amount % 1 === 0 ? 0 : 2
-  }).format(amount);
+export function formatPrice(price, currency = "GHS") {
+  return formatMoney(price, currency);
 }
+
+export { formatDualPrice };

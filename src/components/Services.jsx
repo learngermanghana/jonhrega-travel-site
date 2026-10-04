@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container";
-import { formatPrice, servicePath, serviceSummary } from "../utils/serviceDisplay";
+import { formatDualPrice, servicePath, serviceSummary } from "../utils/serviceDisplay";
 import { fetchSedifexServices } from "../utils/sedifexServices";
 
 function ServiceImage({ service }) {
@@ -36,7 +36,7 @@ function ServiceCard({ service }) {
         <p className="serviceCard__text">{serviceSummary(service.description, 145)}</p>
         <div className="serviceCard__priceRow">
           <span>Service fee</span>
-          <strong>{formatPrice(service.price)}</strong>
+          <strong>{formatDualPrice(service)}</strong>
         </div>
         <div className="serviceCard__actions">
           <Link className="btn btn--small" to={`/booking?serviceId=${encodeURIComponent(service.id)}`}>
