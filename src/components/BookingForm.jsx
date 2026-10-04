@@ -143,11 +143,25 @@ export default function BookingForm() {
   const quantity = isTourPackage
     ? Math.min(requestedQuantity, maxTravellers && maxTravellers > 0 ? maxTravellers : requestedQuantity)
     : 1;
-  const unitPrice = Number(selectedDeparture?.price ?? selectedService?.price ?? 0);
+  const departureMode = selectedDeparture?.registrationMode || "";
+  const departurePaymentUnit =
+    departureMode === "enquiry" || departureMode === "free"
+      ? 0
+      : departureMode === "deposit"
+        ? Number(selectedDeparture?.depositAmount ?? selectedService?.tour?.depositAmount ?? 0)
+        : Number(selectedDeparture?.price ?? selectedService?.price ?? 0);
+  const unitPrice = selectedDeparture
+    ? departurePaymentUnit
+    : isTourPackage
+      ? 0
+      : Number(selectedService?.price ?? 0);
   const paymentAmount = Number.isFinite(unitPrice) && unitPrice > 0 ? unitPrice * quantity : 0;
   const paymentCurrency = selectedDeparture?.currency || selectedService?.currency || "GHS";
 
   function updateField(name, value) {
+    if (name === "serviceId" && selectedDeparture && selectedDeparture.serviceId !== value) {
+      setSelectedDeparture(null);
+    }
     setForm((current) => ({ ...current, [name]: value }));
   }
 
@@ -227,9 +241,13 @@ export default function BookingForm() {
     <section className="section">
       <Container>
         <div className="section__head">
-          <h2>Book an appointment</h2>
+          <h2>{isTourPackage ? "Book or enquire about this tour" : "Book an appointment"}</h2>
           <p>
-            Tell us what you need, choose your preferred date and time, and we will receive your request immediately. If the service requires payment, you will continue to secure Paystack checkout after submitting.
+            {isTourPackage
+              ? selectedDeparture
+                ? "Confirm the selected departure, tell us who is travelling, and continue to secure checkout when this trip requires payment."
+                : "Tell us who is travelling and the dates you are considering. Our team will confirm the next suitable departure before any payment is requested."
+              : "Tell us what you need, choose your preferred date and time, and we will receive your request immediately. If the service requires payment, you will continue to secure Paystack checkout after submitting."}
           </p>
         </div>
 
@@ -388,11 +406,21 @@ export default function BookingForm() {
             {submitMessage && <p className="formAlert formAlert--success">{submitMessage}</p>}
 
             <button className="btn" type="submit" disabled={submitting || loadingServices || !selectedService || !acceptedTerms}>
-              {submitting ? "Creating appointment..." : paymentAmount > 0 ? "Book & Pay Securely" : "Create Appointment"}
+              {submitting
+                ? (isTourPackage ? "Submitting tour request..." : "Creating appointment...")
+                : isTourPackage && selectedDeparture && paymentAmount > 0
+                  ? "Book Departure & Pay Securely"
+                  : isTourPackage
+                    ? "Send Tour Enquiry"
+                    : paymentAmount > 0
+                      ? "Book & Pay Securely"
+                      : "Create Appointment"}
             </button>
 
             <p className="tiny">
-              Your appointment request is saved first. Online payment is confirmed only after secure checkout verification.
+              {isTourPackage
+                ? "Your tour request is saved first. A selected Sedifex departure stays linked to the booking; online payment is confirmed only after secure checkout verification."
+                : "Your appointment request is saved first. Online payment is confirmed only after secure checkout verification."}
             </p>
           </form>
 
