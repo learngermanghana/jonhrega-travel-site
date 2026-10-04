@@ -60,6 +60,30 @@ function isService(item) {
   return itemType === "service" || type === "SERVICE";
 }
 
+function isTourPackage(item) {
+  const sourceItemType = String(item?.sourceItemType || item?.source_item_type || item?.itemType || item?.item_type || "").toLowerCase();
+  const serviceKind = String(item?.serviceKind || item?.service_kind || "").toLowerCase();
+  return sourceItemType === "tour_package" || serviceKind === "tour_package" || Boolean(item?.tour);
+}
+
+function cleanStringArray(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((entry) => String(entry || "").trim())
+    .filter(Boolean);
+}
+
+function normalizeItinerary(value) {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((entry, index) => ({
+      day: Math.max(1, Number(entry?.day) || index + 1),
+      title: String(entry?.title || "").trim(),
+      description: String(entry?.description || "").trim()
+    }))
+    .filter((entry) => entry.title || entry.description);
+}
+
 function getImageCandidate(value) {
   if (!value) return null;
   if (typeof value === "string") return value;
@@ -109,20 +133,45 @@ function collectImageUrls(item) {
 
 function normalizeService(item) {
   const imageUrls = collectImageUrls(item);
+  const rawTour = item.tour && typeof item.tour === "object" ? item.tour : {};
+  const sourceItemType = item.sourceItemType || item.source_item_type || item.itemType || item.item_type || null;
+  const serviceKind = item.serviceKind || item.service_kind || null;
+  const tourPackage = isTourPackage(item);
 
   return {
     id: item.id || item.serviceId || item.itemId || item.item_id || item.name,
     storeId: item.storeId || null,
     name: item.name || item.serviceName || "Service",
-    category: item.category || "Travel Services",
+    category: item.category || (tourPackage ? "Travel & Tours" : "Travel Services"),
     brand: item.brand || item.manufacturerName || null,
     manufacturerName: item.manufacturerName || item.brand || null,
     description: item.description || item.summary || "Book this service with Jonhrega Travel and Tours.",
     price: typeof item.price === "number" ? item.price : Number(item.price || 0),
     priceMinor: item.priceMinor || null,
+    currency: String(item.currency || "GHS").trim().toUpperCase() || "GHS",
     stockCount: item.stockCount ?? null,
     itemType: item.itemType || item.item_type || "service",
     type: item.type || "SERVICE",
+    serviceKind,
+    sourceItemType,
+    isTourPackage: tourPackage,
+    tour: tourPackage
+      ? {
+          destination: rawTour.destination || item.destination || null,
+          tourStyle: rawTour.tourStyle || item.tourStyle || null,
+          durationDays: Number(rawTour.durationDays ?? item.durationDays) || null,
+          durationNights: Number(rawTour.durationNights ?? item.durationNights) || null,
+          startingCity: rawTour.startingCity || item.startingCity || null,
+          endingCity: rawTour.endingCity || item.endingCity || null,
+          shortSummary: rawTour.shortSummary || item.shortSummary || null,
+          itinerary: normalizeItinerary(rawTour.itinerary || item.itinerary),
+          inclusions: cleanStringArray(rawTour.inclusions || item.inclusions),
+          exclusions: cleanStringArray(rawTour.exclusions || item.exclusions),
+          capacity: Number(rawTour.capacity ?? item.capacity) || null,
+          allowDepositPayment: rawTour.allowDepositPayment === true || item.allowDepositPayment === true,
+          depositAmount: Number(rawTour.depositAmount ?? item.depositAmount) || null
+        }
+      : null,
     imageUrl: imageUrls[0] || null,
     imageUrls,
     imageAlt: item.imageAlt || item.alt || item.name || item.serviceName || "Jonhrega Travel and Tours service",
@@ -130,7 +179,7 @@ function normalizeService(item) {
   };
 }
 
-function collectServices(data) {
+function collectCatalog(data) {
   const candidates = [
     ...(Array.isArray(data.products) ? data.products : []),
     ...(Array.isArray(data.publicServices) ? data.publicServices : []),
@@ -138,7 +187,7 @@ function collectServices(data) {
   ];
 
   const seen = new Set();
-  return candidates
+  const normalized = candidates
     .filter((item) => item && isService(item))
     .map(normalizeService)
     .filter((item) => {
@@ -146,6 +195,11 @@ function collectServices(data) {
       seen.add(item.id);
       return true;
     });
+
+  return {
+    services: normalized.filter((item) => !item.isTourPackage),
+    tours: normalized.filter((item) => item.isTourPackage)
+  };
 }
 
 export default async function handler(req, res) {
@@ -188,13 +242,16 @@ export default async function handler(req, res) {
       });
     }
 
-    const services = collectServices(body);
+    const { services, tours } = collectCatalog(body);
 
     const payload = {
       ok: true,
       storeId: body.storeId || config.storeId,
-      count: services.length,
-      services
+      count: services.length + tours.length,
+      serviceCount: services.length,
+      tourCount: tours.length,
+      services,
+      tours
     };
     cachedProducts = { payload, savedAt: Date.now() };
 
