@@ -1139,6 +1139,163 @@ input:focus, select:focus, textarea:focus{
   font-size: .9rem;
 }
 
+.tourCard__departures{
+  display: grid;
+  gap: .7rem;
+  margin: .85rem 0 1rem;
+  padding: .85rem;
+  border: 1px solid rgba(0,119,200,.16);
+  border-radius: 16px;
+  background: rgba(245,249,255,.64);
+}
+
+.tourCard__departuresHeader{
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .8rem;
+}
+
+.tourCard__departuresHeader h4{
+  margin: 0;
+  font-size: .98rem;
+}
+
+.tourCard__departuresHeader p{
+  margin: .2rem 0 0;
+  color: rgba(11,31,58,.64);
+  font-size: .82rem;
+}
+
+.tourCard__nextBadge{
+  flex: 0 0 auto;
+  max-width: 58%;
+  padding: .3rem .55rem;
+  border-radius: 999px;
+  background: rgba(0,119,200,.1);
+  border: 1px solid rgba(0,119,200,.18);
+  color: rgba(11,31,58,.8);
+  font-size: .75rem;
+  font-weight: 850;
+  text-align: center;
+}
+
+.tourCard__departureList{
+  display: grid;
+  gap: .6rem;
+}
+
+.tourCard__departureRow{
+  display: grid;
+  grid-template-columns: minmax(150px,.9fr) minmax(150px,1fr) minmax(165px,.9fr);
+  gap: .8rem;
+  align-items: center;
+  padding: .75rem;
+  border: 1px solid rgba(11,31,58,.1);
+  border-radius: 14px;
+  background: rgba(255,255,255,.78);
+}
+
+.tourCard__departureRow.is-unavailable{
+  background: rgba(244,248,255,.58);
+}
+
+.tourCard__departureDate{
+  display: grid;
+  gap: .18rem;
+}
+
+.tourCard__departureDate span{
+  color: rgba(11,31,58,.56);
+  font-size: .72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.tourCard__departureDate strong{
+  font-size: .9rem;
+  line-height: 1.35;
+}
+
+.tourCard__departureFacts{
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+}
+
+.tourCard__departureFacts > span{
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: .2rem .48rem;
+  border-radius: 999px;
+  background: rgba(11,31,58,.055);
+  color: rgba(11,31,58,.72);
+  font-size: .74rem;
+  font-weight: 750;
+}
+
+.tourCard__seatStatus{
+  background: rgba(0,119,200,.1) !important;
+  color: rgba(11,31,58,.88) !important;
+}
+
+.tourCard__seatStatus.is-full{
+  background: rgba(180,35,24,.08) !important;
+  color: #8f231a !important;
+}
+
+.tourCard__departureBooking{
+  display: grid;
+  gap: .42rem;
+  justify-items: end;
+  text-align: right;
+}
+
+.tourCard__departureBooking > strong{
+  font-size: .84rem;
+  line-height: 1.35;
+}
+
+.tourCard__departureBooking .btn{
+  width: auto;
+  min-height: 38px;
+}
+
+.tourCard__soldOut{
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  padding: .45rem .7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(143,35,26,.18);
+  background: rgba(180,35,24,.07);
+  color: #8f231a;
+  font-size: .78rem;
+  font-weight: 850;
+}
+
+.tourCard__noDepartures{
+  display: grid;
+  gap: .65rem;
+  padding: .75rem;
+  border: 1px dashed rgba(11,31,58,.18);
+  border-radius: 14px;
+  background: rgba(255,255,255,.5);
+}
+
+.tourCard__noDepartures p{
+  margin: 0;
+  color: rgba(11,31,58,.72);
+  line-height: 1.5;
+  font-size: .86rem;
+}
+
+.tourCard__noDepartures .btn{
+  width: fit-content;
+}
+
 .tourCard__subheading{
   margin: .35rem 0 .35rem;
   font-size: .92rem;
@@ -1202,9 +1359,47 @@ input:focus, select:focus, textarea:focus{
   border: 1px solid rgba(11,31,58,.1);
 }
 
+@media (max-width: 900px){
+  .tourCard__departureRow{
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tourCard__departureBooking{
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0,1fr) auto;
+    justify-items: stretch;
+    align-items: center;
+    text-align: left;
+  }
+}
+
 @media (max-width: 720px){
   .tourCard__gallery{
     grid-template-columns: 1fr;
+  }
+
+  .tourCard__departuresHeader{
+    display: grid;
+  }
+
+  .tourCard__nextBadge{
+    max-width: none;
+    width: fit-content;
+  }
+
+  .tourCard__departureRow{
+    grid-template-columns: 1fr;
+  }
+
+  .tourCard__departureBooking{
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .tourCard__departureBooking .btn,
+  .tourCard__noDepartures .btn{
+    width: 100%;
   }
 }
 
