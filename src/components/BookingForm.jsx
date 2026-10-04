@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Container from "./Container";
 import { serviceSummary } from "../utils/serviceDisplay";
+import { formatDualPrice, formatMoney } from "../utils/pricing";
 import { fetchSedifexBookableItems } from "../utils/sedifexServices";
 import { fetchSedifexTourDepartures } from "../utils/sedifexTours";
 
@@ -27,21 +28,6 @@ function todayIsoDate() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function formatPrice(price, currency = "GHS") {
-  const amount = Number(price);
-  if (!Number.isFinite(amount) || amount <= 0) return "Staff will confirm price";
-
-  try {
-    return new Intl.NumberFormat("en-GH", {
-      style: "currency",
-      currency: String(currency || "GHS").toUpperCase(),
-      maximumFractionDigits: amount % 1 === 0 ? 0 : 2
-    }).format(amount);
-  } catch {
-    return `${String(currency || "GHS").toUpperCase()} ${amount.toFixed(2)}`;
-  }
-}
-
 function slotTimeValue(slot) {
   if (!slot?.startAt) return "10:00";
   const parsed = new Date(slot.startAt);
@@ -57,6 +43,39 @@ function slotTimeValue(slot) {
   } catch {
     return slot.startAt.slice(11, 16) || "10:00";
   }
+}
+
+function departureUsesCatalogPrice(departure, service) {
+  if (!departure) return true;
+  if (departure.price == null) return true;
+
+  const departureCurrency = String(departure.currency || service?.currency || "GHS").toUpperCase();
+  const serviceCurrency = String(service?.currency || "GHS").toUpperCase();
+
+  return Number(departure.price) === Number(service?.price) && departureCurrency === serviceCurrency;
+}
+
+function bookingAmountLabel({ service, departure, amount, currency, quantity, isTourPackage }) {
+  if (!service) return "Staff will confirm price";
+
+  if (isTourPackage && !departure) {
+    return `Starting from ${formatDualPrice(service)}`;
+  }
+
+  if (departure?.registrationMode === "enquiry") return "Price on request";
+  if (departure?.registrationMode === "free") return "No payment required";
+
+  if (amount <= 0) return "Staff will confirm price";
+
+  if (departure?.registrationMode === "deposit") {
+    return `Deposit ${formatMoney(amount, currency)}`;
+  }
+
+  if (!departure || departureUsesCatalogPrice(departure, service)) {
+    return formatDualPrice(service, { multiplier: quantity });
+  }
+
+  return formatMoney(amount, currency);
 }
 
 export default function BookingForm() {
@@ -165,6 +184,14 @@ export default function BookingForm() {
       : Number(selectedService?.price ?? 0);
   const paymentAmount = Number.isFinite(unitPrice) && unitPrice > 0 ? unitPrice * quantity : 0;
   const paymentCurrency = selectedDeparture?.currency || selectedService?.currency || "GHS";
+  const displayedAmount = bookingAmountLabel({
+    service: selectedService,
+    departure: selectedDeparture,
+    amount: paymentAmount,
+    currency: paymentCurrency,
+    quantity,
+    isTourPackage
+  });
 
   function updateField(name, value) {
     if (name === "serviceId" && selectedDeparture && selectedDeparture.serviceId !== value) {
@@ -312,7 +339,7 @@ export default function BookingForm() {
                   {!loadingServices && services.length === 0 && <option>No services available</option>}
                   {services.map((service) => (
                     <option key={service.id} value={service.id}>
-                      {service.isTourPackage ? "Tour: " : ""}{service.name} {Number(service.price) > 0 ? `- ${formatPrice(service.price, service.currency)}` : ""}
+                      {service.isTourPackage ? "Tour: " : ""}{service.name} {Number(service.price) > 0 ? `- ${formatDualPrice(service)}` : ""}
                     </option>
                   ))}
                 </select>
@@ -465,7 +492,7 @@ export default function BookingForm() {
                 </div>
                 <div className="kv">
                   <div className="kv__k">Amount</div>
-                  <div className="kv__v">{paymentAmount > 0 ? formatPrice(paymentAmount, paymentCurrency) : formatPrice(0, paymentCurrency)}</div>
+                  <div className="kv__v">{displayedAmount}</div>
                 </div>
                 {selectedDeparture ? (
                   <div className="kv">
