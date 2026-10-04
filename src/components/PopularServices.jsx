@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container";
-import { formatPrice, servicePath, serviceSummary } from "../utils/serviceDisplay";
+import { formatDualPrice, servicePath, serviceSummary } from "../utils/serviceDisplay";
 import { fetchSedifexServices } from "../utils/sedifexServices";
 
 function PopularServiceImage({ service }) {
@@ -89,7 +89,7 @@ export default function PopularServices() {
                   <h3>{service.name}</h3>
                   <p>{serviceSummary(service.description, 125)}</p>
                   <div className="popularServiceCard__footer">
-                    <strong>{formatPrice(service.price)}</strong>
+                    <strong>{formatDualPrice(service)}</strong>
                     <Link className="btn btn--small" to={`/booking?serviceId=${encodeURIComponent(service.id)}`}>
                       Book Now
                     </Link>
