@@ -1,67 +1,105 @@
-const SERVICES_CACHE_KEY = "jonhrega:sedifex-services:v1";
-const SERVICES_CACHE_TTL_MS = 15 * 60 * 1000;
+const CATALOG_CACHE_KEY = "jonhrega:sedifex-catalog:v2";
+const CATALOG_CACHE_TTL_MS = 15 * 60 * 1000;
 
-let inFlightServicesRequest = null;
-let memoryServicesCache = null;
+let inFlightCatalogRequest = null;
+let memoryCatalogCache = null;
 
-function readStoredServices() {
+function emptyCatalog() {
+  return { services: [], tours: [] };
+}
+
+function normalizeCatalog(value) {
+  const services = Array.isArray(value?.services) ? value.services : [];
+  const tours = Array.isArray(value?.tours) ? value.tours : [];
+  return { services, tours };
+}
+
+function readStoredCatalog() {
   if (typeof window === "undefined") return null;
 
   try {
-    const cached = JSON.parse(window.sessionStorage.getItem(SERVICES_CACHE_KEY) || "null");
-    if (!cached || !Array.isArray(cached.services) || Date.now() - cached.savedAt > SERVICES_CACHE_TTL_MS) {
-      return null;
-    }
-    return cached.services;
+    const cached = JSON.parse(window.sessionStorage.getItem(CATALOG_CACHE_KEY) || "null");
+    if (!cached || Date.now() - cached.savedAt > CATALOG_CACHE_TTL_MS) return null;
+    return normalizeCatalog(cached.catalog);
   } catch {
     return null;
   }
 }
 
-function storeServices(services) {
-  memoryServicesCache = { services, savedAt: Date.now() };
+function storeCatalog(catalog) {
+  memoryCatalogCache = { catalog, savedAt: Date.now() };
 
   if (typeof window === "undefined") return;
 
   try {
-    window.sessionStorage.setItem(SERVICES_CACHE_KEY, JSON.stringify(memoryServicesCache));
+    window.sessionStorage.setItem(CATALOG_CACHE_KEY, JSON.stringify(memoryCatalogCache));
   } catch {
-    // If storage is unavailable or full, the in-memory cache still prevents duplicate calls per page load.
+    // In-memory cache still avoids duplicate requests when sessionStorage is unavailable.
   }
 }
 
-export async function fetchSedifexServices({ forceRefresh = false } = {}) {
-  if (!forceRefresh && memoryServicesCache && Date.now() - memoryServicesCache.savedAt <= SERVICES_CACHE_TTL_MS) {
-    return memoryServicesCache.services;
+export async function fetchSedifexCatalog({ forceRefresh = false, signal } = {}) {
+  if (!forceRefresh && memoryCatalogCache && Date.now() - memoryCatalogCache.savedAt <= CATALOG_CACHE_TTL_MS) {
+    return memoryCatalogCache.catalog;
   }
 
   if (!forceRefresh) {
-    const storedServices = readStoredServices();
-    if (storedServices) {
-      memoryServicesCache = { services: storedServices, savedAt: Date.now() };
-      return storedServices;
+    const storedCatalog = readStoredCatalog();
+    if (storedCatalog) {
+      memoryCatalogCache = { catalog: storedCatalog, savedAt: Date.now() };
+      return storedCatalog;
     }
   }
 
-  if (!forceRefresh && inFlightServicesRequest) return inFlightServicesRequest;
+  if (!forceRefresh && inFlightCatalogRequest) return inFlightCatalogRequest;
 
-  inFlightServicesRequest = fetch("/api/sedifex/products", {
+  inFlightCatalogRequest = fetch("/api/sedifex/products", {
+    signal,
     headers: { Accept: "application/json" }
   })
     .then(async (response) => {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok || data.ok === false) {
-        throw new Error(data.message || "Could not load services right now.");
+        throw new Error(data.message || "Could not load the Sedifex catalog right now.");
       }
 
-      const services = Array.isArray(data.services) ? data.services : [];
-      storeServices(services);
-      return services;
+      const catalog = normalizeCatalog(data);
+      storeCatalog(catalog);
+      return catalog;
     })
     .finally(() => {
-      inFlightServicesRequest = null;
+      inFlightCatalogRequest = null;
     });
 
-  return inFlightServicesRequest;
+  return inFlightCatalogRequest;
 }
+
+export async function fetchSedifexServices(options = {}) {
+  const catalog = await fetchSedifexCatalog(options);
+  return catalog.services;
+}
+
+export async function fetchSedifexTours(options = {}) {
+  const catalog = await fetchSedifexCatalog(options);
+  return catalog.tours;
+}
+
+export async function fetchSedifexBookableItems(options = {}) {
+  const catalog = await fetchSedifexCatalog(options);
+  return [...catalog.services, ...catalog.tours];
+}
+
+export function clearSedifexCatalogCache() {
+  memoryCatalogCache = null;
+  inFlightCatalogRequest = null;
+
+  if (typeof window === "undefined") return;
+  try {
+    window.sessionStorage.removeItem(CATALOG_CACHE_KEY);
+  } catch {
+    // Ignore storage cleanup failures.
+  }
+}
+
+export { emptyCatalog };

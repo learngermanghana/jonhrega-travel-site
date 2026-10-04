@@ -1094,3 +1094,117 @@ input:focus, select:focus, textarea:focus{
     background: linear-gradient(135deg, rgba(0,119,200,.22), rgba(111,183,255,.14));
   }
 }
+
+.tourCard--live{
+  position: relative;
+}
+
+.tourCard__liveBadge{
+  position: absolute;
+  top: .75rem;
+  left: .75rem;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: .35rem .65rem;
+  border-radius: 999px;
+  background: rgba(245,249,255,.92);
+  border: 1px solid rgba(0,119,200,.28);
+  box-shadow: 0 8px 18px rgba(12,26,56,.16);
+  color: rgba(11,31,58,.92);
+  font-size: .78rem;
+  font-weight: 900;
+}
+
+.tourCard__summary{
+  margin: 0 0 .75rem;
+  color: rgba(11,31,58,.76);
+  line-height: 1.6;
+}
+
+.tourCard__price small{
+  font-weight: 750;
+  color: rgba(11,31,58,.68);
+}
+
+.tourCard__departure{
+  margin: 0 0 .8rem;
+  padding: .7rem .8rem;
+  border-radius: 14px;
+  border: 1px solid rgba(0,119,200,.16);
+  background: rgba(0,119,200,.07);
+  color: rgba(11,31,58,.82);
+  line-height: 1.45;
+  font-size: .9rem;
+}
+
+.tourCard__subheading{
+  margin: .35rem 0 .35rem;
+  font-size: .92rem;
+}
+
+.tourCard__details{
+  margin: .75rem 0 .9rem;
+  padding: .75rem .85rem;
+  border-radius: 16px;
+  border: 1px solid rgba(11,31,58,.12);
+  background: rgba(255,255,255,.46);
+}
+
+.tourCard__details summary{
+  cursor: pointer;
+  font-weight: 900;
+  color: rgba(11,31,58,.9);
+}
+
+.tourCard__details[open] summary{
+  margin-bottom: .85rem;
+}
+
+.tourCard__itinerary{
+  display: grid;
+  gap: .65rem;
+  margin-bottom: .85rem;
+}
+
+.tourCard__itinerary h4,
+.tourCard__details h4{
+  margin: .1rem 0 .35rem;
+}
+
+.tourCard__day{
+  padding: .7rem .75rem;
+  border-radius: 13px;
+  background: rgba(245,249,255,.8);
+  border: 1px solid rgba(11,31,58,.08);
+}
+
+.tourCard__day p{
+  margin: .3rem 0 0;
+  color: rgba(11,31,58,.74);
+  line-height: 1.55;
+}
+
+.tourCard__gallery{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .55rem;
+  margin-top: .85rem;
+}
+
+.tourCard__gallery img{
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(11,31,58,.1);
+}
+
+@media (max-width: 720px){
+  .tourCard__gallery{
+    grid-template-columns: 1fr;
+  }
+}
+

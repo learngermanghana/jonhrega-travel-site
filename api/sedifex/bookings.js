@@ -162,6 +162,8 @@ async function createBookingAndCheckout(req, res, config) {
   const serviceName = body.serviceName || "Travel service appointment";
   const quantity = Math.max(1, Math.floor(asPositiveNumber(body.quantity, 1)));
   const paymentAmount = asPositiveNumber(body.paymentAmount, 0);
+  const requestedCurrency = String(body.currency || "GHS").trim().toUpperCase();
+  const currency = requestedCurrency === "USD" ? "USD" : "GHS";
   const customer = body.customer || {};
 
   if (!serviceId && !slotId) {
@@ -253,7 +255,7 @@ async function createBookingAndCheckout(req, res, config) {
     orderType: "service",
     sourceChannel: "client_website",
     sourceLabel: "Client Website",
-    currency: "GHS",
+    currency,
     amount: paymentAmount,
     customer: bookingPayload.customer,
     items: [
@@ -269,7 +271,7 @@ async function createBookingAndCheckout(req, res, config) {
         qty: quantity,
         quantity,
         type: "SERVICE",
-        item_type: "service"
+        item_type: body.attributes?.tourPackage === true ? "tour_package" : "service"
       }
     ],
     returnUrl: config.checkoutReturnUrl,
@@ -277,7 +279,9 @@ async function createBookingAndCheckout(req, res, config) {
       bookingId,
       clientOrderId,
       channel: "client-website",
-      source: "website_booking_form"
+      source: "website_booking_form",
+      eventKind: body.attributes?.eventKind || undefined,
+      tourPackage: body.attributes?.tourPackage === true
     }
   };
 

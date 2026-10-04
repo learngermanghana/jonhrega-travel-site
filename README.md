@@ -4,13 +4,21 @@ React + Vite website for Jonhrega Travel and Tours.
 
 ## Sedifex integration
 
-The `/services` page loads the live product/service catalog through a server-side API proxy:
+The website loads the live Sedifex catalog through a server-side API proxy:
 
 - `GET /api/sedifex/products`
 - Upstream: `GET /v1IntegrationProducts?storeId=<storeId>`
-- Services are filtered by `itemType === "service"` or `type === "SERVICE"`.
+- `/services` renders ordinary service records.
+- `/tours` renders only Sedifex Tour Packages identified by `serviceKind === "tour_package"` or `sourceItemType === "tour_package"`.
+- The proxy keeps tour itinerary, inclusions, exclusions, route, traveller capacity, currency, deposit settings, and multi-photo data.
 
-The `/booking` page creates a Sedifex booking first, then starts hosted checkout when the selected service has a price:
+Tour departure dates come from:
+
+- `GET /api/sedifex/availability?eventKind=trip`
+- Upstream: `GET /v1IntegrationAvailability?storeId=<storeId>&from=<ISO>&to=<ISO>`
+- Clicking **Book This Departure** carries the Sedifex `slotId` into the booking flow so seat tracking stays attached to the real trip.
+
+The `/booking` page creates a Sedifex booking first, then starts hosted checkout when the selected service or confirmed trip departure requires payment:
 
 - `POST /api/sedifex/bookings`
 - Upstream booking: `POST /v1IntegrationBookings?storeId=<storeId>`

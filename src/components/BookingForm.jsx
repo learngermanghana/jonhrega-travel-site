@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Container from "./Container";
 import { serviceSummary } from "../utils/serviceDisplay";
-import { fetchSedifexServices } from "../utils/sedifexServices";
+import { fetchSedifexBookableItems } from "../utils/sedifexServices";
+import { fetchSedifexTourDepartures } from "../utils/sedifexTours";
 
 const appointmentTimes = [
   "09:00",
@@ -26,23 +27,46 @@ function todayIsoDate() {
   return new Date().toISOString().slice(0, 10);
 }
 
-function formatPrice(price) {
+function formatPrice(price, currency = "GHS") {
   const amount = Number(price);
   if (!Number.isFinite(amount) || amount <= 0) return "Staff will confirm price";
 
-  return new Intl.NumberFormat("en-GH", {
-    style: "currency",
-    currency: "GHS",
-    maximumFractionDigits: amount % 1 === 0 ? 0 : 2
-  }).format(amount);
+  try {
+    return new Intl.NumberFormat("en-GH", {
+      style: "currency",
+      currency: String(currency || "GHS").toUpperCase(),
+      maximumFractionDigits: amount % 1 === 0 ? 0 : 2
+    }).format(amount);
+  } catch {
+    return `${String(currency || "GHS").toUpperCase()} ${amount.toFixed(2)}`;
+  }
+}
+
+function slotTimeValue(slot) {
+  if (!slot?.startAt) return "10:00";
+  const parsed = new Date(slot.startAt);
+  if (Number.isNaN(parsed.getTime())) return "10:00";
+
+  try {
+    return new Intl.DateTimeFormat("en-GB", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+      timeZone: slot.timezone || "Africa/Accra"
+    }).format(parsed);
+  } catch {
+    return slot.startAt.slice(11, 16) || "10:00";
+  }
 }
 
 export default function BookingForm() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const requestedServiceId = searchParams.get("serviceId") || "";
+  const requestedSlotId = searchParams.get("slotId") || "";
 
   const [services, setServices] = useState([]);
+  const [selectedDeparture, setSelectedDeparture] = useState(null);
   const [loadingServices, setLoadingServices] = useState(true);
   const [serviceError, setServiceError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -57,7 +81,8 @@ export default function BookingForm() {
     name: "",
     email: "",
     phone: "",
-    notes: ""
+    notes: "",
+    quantity: "1"
   });
 
   useEffect(() => {
@@ -68,14 +93,35 @@ export default function BookingForm() {
       setServiceError("");
 
       try {
-        const nextServices = await fetchSedifexServices({ signal: controller.signal });
+        const [nextServices, tourDepartures] = await Promise.all([
+          fetchSedifexBookableItems({ signal: controller.signal }),
+          requestedSlotId ? fetchSedifexTourDepartures({ signal: controller.signal }) : Promise.resolve([])
+        ]);
         setServices(nextServices);
+
+        const requestedDeparture = requestedSlotId
+          ? tourDepartures.find(
+              (slot) =>
+                slot.id === requestedSlotId &&
+                (!requestedServiceId || slot.serviceId === requestedServiceId)
+            ) || null
+          : null;
+        setSelectedDeparture(requestedDeparture);
 
         setForm((current) => {
           const serviceExists = nextServices.some((service) => service.id === current.serviceId);
+          const nextServiceId = requestedDeparture?.serviceId ||
+            (serviceExists
+              ? current.serviceId
+              : nextServices.some((service) => service.id === requestedServiceId)
+                ? requestedServiceId
+                : nextServices[0]?.id || current.serviceId);
+
           return {
             ...current,
-            serviceId: serviceExists ? current.serviceId : nextServices[0]?.id || current.serviceId
+            serviceId: nextServiceId,
+            bookingDate: requestedDeparture?.eventDate || requestedDeparture?.startAt?.slice(0, 10) || current.bookingDate,
+            bookingTime: requestedDeparture ? slotTimeValue(requestedDeparture) : current.bookingTime
           };
         });
       } catch (err) {
@@ -89,18 +135,41 @@ export default function BookingForm() {
 
     loadServices();
     return () => controller.abort();
-  }, []);
+  }, [requestedServiceId, requestedSlotId]);
 
   const selectedService = useMemo(
     () => services.find((service) => service.id === form.serviceId) || null,
     [form.serviceId, services]
   );
 
-  const quantity = 1;
-  const unitPrice = Number(selectedService?.price || 0);
-  const paymentAmount = Number.isFinite(unitPrice) && unitPrice > 0 ? unitPrice : 0;
+  const isTourPackage = selectedService?.isTourPackage === true;
+  const requestedQuantity = Math.max(1, Math.floor(Number(form.quantity) || 1));
+  const maxTravellers = selectedDeparture
+    ? selectedDeparture.seatsRemaining
+    : selectedService?.tour?.capacity || null;
+  const departureSoldOut = Boolean(selectedDeparture && selectedDeparture.seatsRemaining <= 0);
+  const quantity = isTourPackage
+    ? Math.min(requestedQuantity, maxTravellers && maxTravellers > 0 ? maxTravellers : requestedQuantity)
+    : 1;
+  const departureMode = selectedDeparture?.registrationMode || "";
+  const departurePaymentUnit =
+    departureMode === "enquiry" || departureMode === "free"
+      ? 0
+      : departureMode === "deposit"
+        ? Number(selectedDeparture?.depositAmount ?? selectedService?.tour?.depositAmount ?? 0)
+        : Number(selectedDeparture?.price ?? selectedService?.price ?? 0);
+  const unitPrice = selectedDeparture
+    ? departurePaymentUnit
+    : isTourPackage
+      ? 0
+      : Number(selectedService?.price ?? 0);
+  const paymentAmount = Number.isFinite(unitPrice) && unitPrice > 0 ? unitPrice * quantity : 0;
+  const paymentCurrency = selectedDeparture?.currency || selectedService?.currency || "GHS";
 
   function updateField(name, value) {
+    if (name === "serviceId" && selectedDeparture && selectedDeparture.serviceId !== value) {
+      setSelectedDeparture(null);
+    }
     setForm((current) => ({ ...current, [name]: value }));
   }
 
@@ -114,6 +183,9 @@ export default function BookingForm() {
       if (!acceptedTerms) {
         throw new Error("Please accept the Terms of Service and Privacy Policy before booking.");
       }
+      if (departureSoldOut) {
+        throw new Error("This departure is fully booked. Please choose another departure or contact Jonhrega.");
+      }
 
       const response = await fetch("/api/sedifex/bookings", {
         method: "POST",
@@ -124,6 +196,7 @@ export default function BookingForm() {
         body: JSON.stringify({
           serviceId: selectedService?.id || form.serviceId,
           serviceName: selectedService?.name || "Travel service appointment",
+          slotId: selectedDeparture?.id || requestedSlotId || undefined,
           bookingDate: form.bookingDate,
           bookingTime: form.bookingTime,
           quantity,
@@ -135,6 +208,7 @@ export default function BookingForm() {
           },
           paymentMethod: paymentAmount > 0 ? "paystack_checkout" : "manual",
           paymentAmount,
+          currency: paymentCurrency,
           sourceChannel: "client_website",
           attributes: {
             source: "website_booking_form",
@@ -142,8 +216,10 @@ export default function BookingForm() {
             pageUrl: window.location.href,
             timezone: "Africa/Accra",
             locale: "en-GB",
-            serviceAppointment: true,
-            quantityHidden: true,
+            serviceAppointment: !isTourPackage,
+            tourPackage: isTourPackage,
+            eventKind: isTourPackage ? "trip" : undefined,
+            quantityHidden: !isTourPackage,
             termsAccepted: true,
             termsAcceptedAt: new Date().toISOString()
           }
@@ -176,9 +252,13 @@ export default function BookingForm() {
     <section className="section">
       <Container>
         <div className="section__head">
-          <h2>Book an appointment</h2>
+          <h2>{isTourPackage ? "Book or enquire about this tour" : "Book an appointment"}</h2>
           <p>
-            Tell us what you need, choose your preferred date and time, and we will receive your request immediately. If the service requires payment, you will continue to secure Paystack checkout after submitting.
+            {isTourPackage
+              ? selectedDeparture
+                ? "Confirm the selected departure, tell us who is travelling, and continue to secure checkout when this trip requires payment."
+                : "Tell us who is travelling and the dates you are considering. Our team will confirm the next suitable departure before any payment is requested."
+              : "Tell us what you need, choose your preferred date and time, and we will receive your request immediately. If the service requires payment, you will continue to secure Paystack checkout after submitting."}
           </p>
         </div>
 
@@ -232,7 +312,7 @@ export default function BookingForm() {
                   {!loadingServices && services.length === 0 && <option>No services available</option>}
                   {services.map((service) => (
                     <option key={service.id} value={service.id}>
-                      {service.name} {Number(service.price) > 0 ? `- ${formatPrice(service.price)}` : ""}
+                      {service.isTourPackage ? "Tour: " : ""}{service.name} {Number(service.price) > 0 ? `- ${formatPrice(service.price, service.currency)}` : ""}
                     </option>
                   ))}
                 </select>
@@ -246,19 +326,38 @@ export default function BookingForm() {
                   value={form.bookingDate}
                   onChange={(e) => updateField("bookingDate", e.target.value)}
                   required
+                  disabled={Boolean(selectedDeparture)}
                 />
               </label>
 
               <label className="field">
-                <span>Preferred time</span>
+                <span>{selectedDeparture ? "Departure time" : "Preferred time"}</span>
                 <select
                   value={form.bookingTime}
                   onChange={(e) => updateField("bookingTime", e.target.value)}
                   required
+                  disabled={Boolean(selectedDeparture)}
                 >
+                  {selectedDeparture && !appointmentTimes.includes(form.bookingTime) ? (
+                    <option value={form.bookingTime}>{form.bookingTime}</option>
+                  ) : null}
                   {appointmentTimes.map((time) => <option key={time}>{time}</option>)}
                 </select>
               </label>
+
+              {isTourPackage ? (
+                <label className="field">
+                  <span>Travellers</span>
+                  <input
+                    type="number"
+                    min="1"
+                    max={maxTravellers && maxTravellers > 0 ? maxTravellers : undefined}
+                    value={form.quantity}
+                    onChange={(e) => updateField("quantity", e.target.value)}
+                    required
+                  />
+                </label>
+              ) : null}
 
               <label className="field">
                 <span>Full name</span>
@@ -317,12 +416,22 @@ export default function BookingForm() {
             {submitError && <p className="formAlert formAlert--error">{submitError}</p>}
             {submitMessage && <p className="formAlert formAlert--success">{submitMessage}</p>}
 
-            <button className="btn" type="submit" disabled={submitting || loadingServices || !selectedService || !acceptedTerms}>
-              {submitting ? "Creating appointment..." : paymentAmount > 0 ? "Book & Pay Securely" : "Create Appointment"}
+            <button className="btn" type="submit" disabled={submitting || loadingServices || !selectedService || !acceptedTerms || departureSoldOut}>
+              {submitting
+                ? (isTourPackage ? "Submitting tour request..." : "Creating appointment...")
+                : isTourPackage && selectedDeparture && paymentAmount > 0
+                  ? "Book Departure & Pay Securely"
+                  : isTourPackage
+                    ? "Send Tour Enquiry"
+                    : paymentAmount > 0
+                      ? "Book & Pay Securely"
+                      : "Create Appointment"}
             </button>
 
             <p className="tiny">
-              Your appointment request is saved first. Online payment is confirmed only after secure checkout verification.
+              {isTourPackage
+                ? "Your tour request is saved first. A selected Sedifex departure stays linked to the booking; online payment is confirmed only after secure checkout verification."
+                : "Your appointment request is saved first. Online payment is confirmed only after secure checkout verification."}
             </p>
           </form>
 
@@ -356,10 +465,25 @@ export default function BookingForm() {
                 </div>
                 <div className="kv">
                   <div className="kv__k">Amount</div>
-                  <div className="kv__v">{paymentAmount > 0 ? formatPrice(paymentAmount) : formatPrice(0)}</div>
+                  <div className="kv__v">{paymentAmount > 0 ? formatPrice(paymentAmount, paymentCurrency) : formatPrice(0, paymentCurrency)}</div>
                 </div>
+                {selectedDeparture ? (
+                  <div className="kv">
+                    <div className="kv__k">Departure</div>
+                    <div className="kv__v">
+                      {selectedDeparture.displayDateText || selectedDeparture.eventDate || "Selected trip"}
+                      {departureSoldOut ? " · Fully booked" : ""}
+                    </div>
+                  </div>
+                ) : null}
+                {isTourPackage ? (
+                  <div className="kv">
+                    <div className="kv__k">Travellers</div>
+                    <div className="kv__v">{quantity}{maxTravellers ? ` of ${maxTravellers} available` : ""}</div>
+                  </div>
+                ) : null}
                 <p className="tiny">
-                  {serviceSummary(selectedService.description, 160)}
+                  {serviceSummary(selectedService.tour?.shortSummary || selectedService.description, 160)}
                 </p>
               </>
             ) : (
