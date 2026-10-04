@@ -76,22 +76,52 @@ export function departuresForTour(slots, tourId) {
     });
 }
 
+function parseDepartureDate(value) {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function formatDate(date, timezone) {
+  return new Intl.DateTimeFormat("en-GH", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: timezone || "Africa/Accra"
+  }).format(date);
+}
+
 export function formatDepartureDate(slot) {
   if (!slot) return "Departure date to be announced";
   if (slot.displayDateText) return slot.displayDateText;
 
   const source = slot.startAt || (slot.eventDate ? `${slot.eventDate}T00:00:00Z` : "");
-  if (!source) return "Departure date to be announced";
+  const parsed = parseDepartureDate(source);
+  if (!parsed) return slot.eventDate || "Departure date to be announced";
 
-  const parsed = new Date(source);
-  if (Number.isNaN(parsed.getTime())) return slot.eventDate || "Departure date to be announced";
+  return formatDate(parsed, slot.timezone);
+}
 
-  return new Intl.DateTimeFormat("en-GH", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: slot.timezone || "Africa/Accra"
-  }).format(parsed);
+export function formatDepartureRange(slot) {
+  if (!slot) return "Departure date to be announced";
+  if (slot.displayDateText) return slot.displayDateText;
+
+  const startSource = slot.startAt || (slot.eventDate ? `${slot.eventDate}T00:00:00Z` : "");
+  const endSource = slot.endAt || "";
+  const start = parseDepartureDate(startSource);
+  const end = parseDepartureDate(endSource);
+
+  if (!start) return slot.eventDate || "Departure date to be announced";
+  if (!end) return formatDate(start, slot.timezone);
+
+  const sameDay =
+    start.getUTCFullYear() === end.getUTCFullYear() &&
+    start.getUTCMonth() === end.getUTCMonth() &&
+    start.getUTCDate() === end.getUTCDate();
+
+  if (sameDay) return formatDate(start, slot.timezone);
+
+  return `${formatDate(start, slot.timezone)} – ${formatDate(end, slot.timezone)}`;
 }
 
 export function departureBookingPath(tour, slot) {

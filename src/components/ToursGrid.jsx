@@ -7,7 +7,7 @@ import {
   departureBookingPath,
   departuresForTour,
   fetchSedifexTourDepartures,
-  formatDepartureDate
+  formatDepartureRange
 } from "../utils/sedifexTours";
 
 function getDurationLabel(days) {
@@ -57,6 +57,35 @@ function departureCanBook(slot) {
       slot.seatsRemaining > 0 &&
       (slot.startAt || slot.eventDate)
   );
+}
+
+function departureModeLabel(slot) {
+  if (slot?.registrationMode === "deposit") return "Deposit booking";
+  if (slot?.registrationMode === "enquiry") return "Enquiry only";
+  if (slot?.registrationMode === "free") return "No payment required";
+  return "Full payment";
+}
+
+function departurePriceLabel(slot, tour) {
+  const currency = slot?.currency || tour?.currency || "GHS";
+
+  if (slot?.registrationMode === "enquiry") return "Price on request";
+  if (slot?.registrationMode === "free") return "No payment required";
+
+  const fullPrice = slot?.price ?? tour?.price;
+  const deposit = slot?.depositAmount ?? tour?.tour?.depositAmount;
+
+  if (slot?.registrationMode === "deposit" && Number(deposit) > 0) {
+    return `Deposit ${formatMoney(deposit, currency)} · Tour ${formatMoney(fullPrice, currency)}`;
+  }
+
+  return formatMoney(fullPrice, currency);
+}
+
+function seatsLabel(slot) {
+  if (!slot) return "";
+  if (slot.seatsRemaining <= 0) return "Fully booked";
+  return `${slot.seatsRemaining} seat${slot.seatsRemaining === 1 ? "" : "s"} remaining`;
 }
 
 export default function ToursGrid() {
@@ -222,7 +251,6 @@ export default function ToursGrid() {
             {filteredTours.map((tour) => {
               const tourDepartures = departuresForTour(departures, tour.id);
               const nextDeparture = tourDepartures[0] || null;
-              const canBookDeparture = departureCanBook(nextDeparture);
               const inclusions = Array.isArray(tour?.tour?.inclusions) ? tour.tour.inclusions : [];
               const exclusions = Array.isArray(tour?.tour?.exclusions) ? tour.tour.exclusions : [];
               const itinerary = Array.isArray(tour?.tour?.itinerary) ? tour.tour.itinerary : [];
@@ -276,13 +304,62 @@ export default function ToursGrid() {
                       ) : null}
                     </div>
 
-                    <div className="tourCard__departure">
-                      <strong>Next departure:</strong>{" "}
-                      {nextDeparture ? formatDepartureDate(nextDeparture) : "Contact us for the next available date"}
-                      {nextDeparture?.seatsRemaining > 0 ? (
-                        <span> · {nextDeparture.seatsRemaining} seat{nextDeparture.seatsRemaining === 1 ? "" : "s"} remaining</span>
-                      ) : null}
-                    </div>
+                    <section className="tourCard__departures" aria-label={`${tour.name} upcoming departures`}>
+                      <div className="tourCard__departuresHeader">
+                        <div>
+                          <h4>Upcoming departures</h4>
+                          <p>
+                            {tourDepartures.length > 0
+                              ? `${tourDepartures.length} available date${tourDepartures.length === 1 ? "" : "s"}`
+                              : "No departure dates are published yet"}
+                          </p>
+                        </div>
+                        {nextDeparture ? <span className="tourCard__nextBadge">Next · {formatDepartureRange(nextDeparture)}</span> : null}
+                      </div>
+
+                      {tourDepartures.length > 0 ? (
+                        <div className="tourCard__departureList">
+                          {tourDepartures.map((departure, index) => {
+                            const canBook = departureCanBook(departure);
+                            return (
+                              <article
+                                className={`tourCard__departureRow${canBook ? "" : " is-unavailable"}`}
+                                key={departure.id}
+                              >
+                                <div className="tourCard__departureDate">
+                                  <span>{index === 0 ? "Next departure" : "Departure"}</span>
+                                  <strong>{formatDepartureRange(departure)}</strong>
+                                </div>
+                                <div className="tourCard__departureFacts">
+                                  <span className={`tourCard__seatStatus${departure.seatsRemaining <= 0 ? " is-full" : ""}`}>
+                                    {seatsLabel(departure)}
+                                  </span>
+                                  <span>{departureModeLabel(departure)}</span>
+                                  {departure.location ? <span>{departure.location}</span> : null}
+                                </div>
+                                <div className="tourCard__departureBooking">
+                                  <strong>{departurePriceLabel(departure, tour)}</strong>
+                                  {canBook ? (
+                                    <Link className="btn btn--small" to={departureBookingPath(tour, departure)}>
+                                      Book this departure
+                                    </Link>
+                                  ) : (
+                                    <span className="tourCard__soldOut">Fully booked</span>
+                                  )}
+                                </div>
+                              </article>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="tourCard__noDepartures">
+                          <p>Interested in this package? Send an enquiry and Jonhrega will confirm the next available travel date.</p>
+                          <Link className="btn btn--small" to={`/booking?serviceId=${encodeURIComponent(tour.id)}`}>
+                            Enquire about this tour
+                          </Link>
+                        </div>
+                      )}
+                    </section>
 
                     {inclusions.length > 0 ? (
                       <>
@@ -334,16 +411,10 @@ export default function ToursGrid() {
                     ) : null}
 
                     <div className="tourCard__actions">
-                      {canBookDeparture ? (
-                        <Link className="btn" to={departureBookingPath(tour, nextDeparture)}>
-                          Book This Departure <span aria-hidden="true">→</span>
-                        </Link>
-                      ) : (
-                        <Link className="btn" to={`/booking?serviceId=${encodeURIComponent(tour.id)}`}>
-                          Enquire About This Tour <span aria-hidden="true">→</span>
-                        </Link>
-                      )}
-                      <Link className="btn btn--ghost" to="/contact">Request Quote</Link>
+                      <Link className="btn btn--ghost" to={`/booking?serviceId=${encodeURIComponent(tour.id)}`}>
+                        Enquire About This Tour
+                      </Link>
+                      <Link className="btn btn--ghost" to="/contact">Request Custom Quote</Link>
                     </div>
                   </div>
                 </article>
