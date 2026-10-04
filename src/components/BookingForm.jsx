@@ -100,17 +100,22 @@ export default function BookingForm() {
         setServices(nextServices);
 
         const requestedDeparture = requestedSlotId
-          ? tourDepartures.find((slot) => slot.id === requestedSlotId) || null
+          ? tourDepartures.find(
+              (slot) =>
+                slot.id === requestedSlotId &&
+                (!requestedServiceId || slot.serviceId === requestedServiceId)
+            ) || null
           : null;
         setSelectedDeparture(requestedDeparture);
 
         setForm((current) => {
           const serviceExists = nextServices.some((service) => service.id === current.serviceId);
-          const nextServiceId = serviceExists
-            ? current.serviceId
-            : nextServices.some((service) => service.id === requestedServiceId)
-              ? requestedServiceId
-              : nextServices[0]?.id || current.serviceId;
+          const nextServiceId = requestedDeparture?.serviceId ||
+            (serviceExists
+              ? current.serviceId
+              : nextServices.some((service) => service.id === requestedServiceId)
+                ? requestedServiceId
+                : nextServices[0]?.id || current.serviceId);
 
           return {
             ...current,
@@ -139,7 +144,10 @@ export default function BookingForm() {
 
   const isTourPackage = selectedService?.isTourPackage === true;
   const requestedQuantity = Math.max(1, Math.floor(Number(form.quantity) || 1));
-  const maxTravellers = selectedDeparture?.seatsRemaining || selectedService?.tour?.capacity || null;
+  const maxTravellers = selectedDeparture
+    ? selectedDeparture.seatsRemaining
+    : selectedService?.tour?.capacity || null;
+  const departureSoldOut = Boolean(selectedDeparture && selectedDeparture.seatsRemaining <= 0);
   const quantity = isTourPackage
     ? Math.min(requestedQuantity, maxTravellers && maxTravellers > 0 ? maxTravellers : requestedQuantity)
     : 1;
@@ -174,6 +182,9 @@ export default function BookingForm() {
     try {
       if (!acceptedTerms) {
         throw new Error("Please accept the Terms of Service and Privacy Policy before booking.");
+      }
+      if (departureSoldOut) {
+        throw new Error("This departure is fully booked. Please choose another departure or contact Jonhrega.");
       }
 
       const response = await fetch("/api/sedifex/bookings", {
@@ -405,7 +416,7 @@ export default function BookingForm() {
             {submitError && <p className="formAlert formAlert--error">{submitError}</p>}
             {submitMessage && <p className="formAlert formAlert--success">{submitMessage}</p>}
 
-            <button className="btn" type="submit" disabled={submitting || loadingServices || !selectedService || !acceptedTerms}>
+            <button className="btn" type="submit" disabled={submitting || loadingServices || !selectedService || !acceptedTerms || departureSoldOut}>
               {submitting
                 ? (isTourPackage ? "Submitting tour request..." : "Creating appointment...")
                 : isTourPackage && selectedDeparture && paymentAmount > 0
@@ -459,7 +470,10 @@ export default function BookingForm() {
                 {selectedDeparture ? (
                   <div className="kv">
                     <div className="kv__k">Departure</div>
-                    <div className="kv__v">{selectedDeparture.displayDateText || selectedDeparture.eventDate || "Selected trip"}</div>
+                    <div className="kv__v">
+                      {selectedDeparture.displayDateText || selectedDeparture.eventDate || "Selected trip"}
+                      {departureSoldOut ? " · Fully booked" : ""}
+                    </div>
                   </div>
                 ) : null}
                 {isTourPackage ? (
