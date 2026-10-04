@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container";
 import { serviceSummary } from "../utils/serviceDisplay";
+import { formatDualPrice, formatMoney } from "../utils/pricing";
 import { fetchSedifexTours } from "../utils/sedifexServices";
 import {
   departureBookingPath,
@@ -28,21 +29,6 @@ function formatDuration(tour) {
   return `${days} day${days === 1 ? "" : "s"}`;
 }
 
-function formatMoney(value, currency = "GHS") {
-  const amount = Number(value);
-  if (!Number.isFinite(amount) || amount <= 0) return "Contact for price";
-
-  try {
-    return new Intl.NumberFormat("en-GH", {
-      style: "currency",
-      currency: String(currency || "GHS").toUpperCase(),
-      maximumFractionDigits: amount % 1 === 0 ? 0 : 2
-    }).format(amount);
-  } catch {
-    return `${String(currency || "GHS").toUpperCase()} ${amount.toFixed(2)}`;
-  }
-}
-
 function routeLabel(tour) {
   const start = tour?.tour?.startingCity;
   const end = tour?.tour?.endingCity;
@@ -66,6 +52,15 @@ function departureModeLabel(slot) {
   return "Full payment";
 }
 
+function departureUsesTourPrice(slot, tour) {
+  if (!slot) return true;
+  if (slot.price == null) return true;
+
+  const slotCurrency = String(slot.currency || tour?.currency || "GHS").toUpperCase();
+  const tourCurrency = String(tour?.currency || "GHS").toUpperCase();
+  return Number(slot.price) === Number(tour?.price) && slotCurrency === tourCurrency;
+}
+
 function departurePriceLabel(slot, tour) {
   const currency = slot?.currency || tour?.currency || "GHS";
 
@@ -74,12 +69,15 @@ function departurePriceLabel(slot, tour) {
 
   const fullPrice = slot?.price ?? tour?.price;
   const deposit = slot?.depositAmount ?? tour?.tour?.depositAmount;
+  const tourPriceLabel = departureUsesTourPrice(slot, tour)
+    ? formatDualPrice(tour)
+    : formatMoney(fullPrice, currency);
 
   if (slot?.registrationMode === "deposit" && Number(deposit) > 0) {
-    return `Deposit ${formatMoney(deposit, currency)} · Tour ${formatMoney(fullPrice, currency)}`;
+    return `Deposit ${formatMoney(deposit, currency)} · Tour ${tourPriceLabel}`;
   }
 
-  return formatMoney(fullPrice, currency);
+  return tourPriceLabel;
 }
 
 function seatsLabel(slot) {
@@ -257,8 +255,6 @@ export default function ToursGrid() {
               const summary =
                 tour?.tour?.shortSummary ||
                 serviceSummary(tour.description || "", 180);
-              const price = nextDeparture?.price ?? tour.price;
-              const currency = nextDeparture?.currency || tour.currency || "GHS";
               const route = routeLabel(tour);
 
               return (
@@ -298,9 +294,9 @@ export default function ToursGrid() {
                     </div>
 
                     <div className="tourCard__price">
-                      {formatMoney(price, currency)}
+                      <span>Starting from {formatDualPrice(tour)}</span>
                       {tour?.tour?.allowDepositPayment && tour?.tour?.depositAmount ? (
-                        <small> · Deposit from {formatMoney(tour.tour.depositAmount, tour.currency || currency)}</small>
+                        <small> · Deposit from {formatMoney(tour.tour.depositAmount, tour.currency || "GHS")}</small>
                       ) : null}
                     </div>
 
