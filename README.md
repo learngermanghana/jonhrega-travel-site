@@ -55,3 +55,7 @@ npm run dev
 ```bash
 npm run build
 ```
+## Production deployment
+
+The website deploys from the `main` branch to the Vercel project `jonhrega-travel-site`.
+
