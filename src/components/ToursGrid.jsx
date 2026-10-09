@@ -162,21 +162,6 @@ export default function ToursGrid() {
   return (
     <section className="section">
       <Container>
-        <div className="section__head section__head--split">
-          <div>
-            <h2>Tour Packages</h2>
-            <p>
-              Explore current Jonhrega packages, prices, inclusions, and upcoming departures.
-
-            </p>
-          </div>
-          <div className="section__actions">
-            <Link className="btn btn--ghost" to="/contact">
-              Request a Custom Quote
-            </Link>
-          </div>
-        </div>
-
         {!loading && !error && tours.length > 0 ? (
           <div className="filterBar" role="group" aria-label="Tour filters">
             <label className="filterField">
@@ -277,7 +262,7 @@ export default function ToursGrid() {
                     <div className="tourCard__subtitle">
                       {tour?.tour?.tourStyle || tour.category || "Tour package"}
                     </div>
-                    <h3 className="tourCard__title">{tour.name}</h3>
+                    <h2 className="tourCard__title">{tour.name}</h2>
 
                     <p className="tourCard__summary">{summary}</p>
 
