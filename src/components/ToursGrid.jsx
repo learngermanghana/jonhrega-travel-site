@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import Container from "./Container";
-import { serviceSummary } from "../utils/serviceDisplay";
+import { cleanServiceText, serviceSummary } from "../utils/serviceDisplay";
 import { formatDualPrice, formatMoney } from "../utils/pricing";
 import { fetchSedifexTours } from "../utils/sedifexServices";
 import {
@@ -167,7 +167,7 @@ export default function ToursGrid() {
             <h2>Tour Packages</h2>
             <p>
               Explore current Jonhrega packages, prices, inclusions, and upcoming departures.
-              Tour information on this page is managed directly from our booking system.
+
             </p>
           </div>
           <div className="section__actions">
@@ -253,8 +253,7 @@ export default function ToursGrid() {
               const exclusions = Array.isArray(tour?.tour?.exclusions) ? tour.tour.exclusions : [];
               const itinerary = Array.isArray(tour?.tour?.itinerary) ? tour.tour.itinerary : [];
               const summary =
-                tour?.tour?.shortSummary ||
-                serviceSummary(tour.description || "", 180);
+                serviceSummary(tour?.tour?.shortSummary || tour.description || "", 220);
               const route = routeLabel(tour);
 
               return (
@@ -283,8 +282,8 @@ export default function ToursGrid() {
                     <p className="tourCard__summary">{summary}</p>
 
                     <div className="tourCard__meta">
-                      <span>{formatDuration(tour)}</span>
-                      {route ? <><span>•</span><span>{route}</span></> : null}
+                      <div><span>Duration</span><strong>{formatDuration(tour)}</strong></div>
+                      {route ? <div><span>Route</span><strong>{route}</strong></div> : null}
                     </div>
 
                     <div className="tourCard__chips">
@@ -294,9 +293,10 @@ export default function ToursGrid() {
                     </div>
 
                     <div className="tourCard__price">
-                      <span>Starting from {formatDualPrice(tour)}</span>
+                      <span className="tourCard__priceLabel">Starting from</span>
+                      <strong>{formatDualPrice(tour)}</strong>
                       {tour?.tour?.allowDepositPayment && tour?.tour?.depositAmount ? (
-                        <small> · Deposit from {formatMoney(tour.tour.depositAmount, tour.currency || "GHS")}</small>
+                        <small>Deposit from {formatMoney(tour.tour.depositAmount, tour.currency || "GHS")}</small>
                       ) : null}
                     </div>
 
@@ -361,7 +361,7 @@ export default function ToursGrid() {
                       <>
                         <h4 className="tourCard__subheading">Included</h4>
                         <ul className="tourCard__list">
-                          {inclusions.slice(0, 5).map((item) => <li key={item}>{item}</li>)}
+                          {inclusions.map((item, index) => <li key={index}>{cleanServiceText(item)}</li>)}
                         </ul>
                       </>
                     ) : null}
@@ -374,9 +374,9 @@ export default function ToursGrid() {
                           <div className="tourCard__itinerary">
                             <h4>Itinerary</h4>
                             {itinerary.map((day) => (
-                              <div className="tourCard__day" key={`${day.day}-${day.title}`}>
-                                <strong>Day {day.day}{day.title ? ` · ${day.title}` : ""}</strong>
-                                {day.description ? <p>{day.description}</p> : null}
+                              <div className="tourCard__day" key={`${day.day}-${cleanServiceText(day.title)}`}>
+                                <strong>Day {day.day}{day.title ? ` · ${cleanServiceText(day.title)}` : ""}</strong>
+                                {day.description ? <p>{cleanServiceText(day.description)}</p> : null}
                               </div>
                             ))}
                           </div>
@@ -386,7 +386,7 @@ export default function ToursGrid() {
                           <div>
                             <h4>Not included</h4>
                             <ul className="tourCard__list">
-                              {exclusions.map((item) => <li key={item}>{item}</li>)}
+                              {exclusions.map((item, index) => <li key={index}>{cleanServiceText(item)}</li>)}
                             </ul>
                           </div>
                         ) : null}

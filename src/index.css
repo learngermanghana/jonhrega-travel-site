@@ -1403,3 +1403,36 @@ input:focus, select:focus, textarea:focus{
   }
 }
 
+
+/* Give live packages a readable text column at every viewport. */
+.toursGrid { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+.tourCard--live { grid-template-columns: minmax(240px, .65fr) minmax(0, 1.35fr); align-items: start; background: #fff; }
+.tourCard--live .tourCard__media { aspect-ratio: 4 / 3; min-height: 0; }
+.tourCard--live .tourCard__media img { position: relative; z-index: 1; }
+.tourCard--live .tourCard__body { min-width: 0; padding: clamp(1.1rem, 3vw, 2rem); overflow-wrap: anywhere; }
+.tourCard--live .tourCard__title { font-size: clamp(1.4rem, 2.5vw, 1.9rem); line-height: 1.25; margin: .4rem 0 .8rem; }
+.tourCard--live .tourCard__summary { max-width: 65ch; line-height: 1.75; margin-bottom: 1.2rem; }
+.tourCard--live .tourCard__meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 0 0 1rem; }
+.tourCard__meta > div { display: grid; gap: .3rem; }
+.tourCard__meta > div > span, .tourCard__priceLabel { font-size: .8rem; font-weight: 600; color: rgba(11,31,58,.65); }
+.tourCard__meta strong { font-size: .95rem; line-height: 1.5; }
+.tourCard--live .tourCard__price { display: grid; gap: .3rem; padding: 1rem 0; margin: .5rem 0; border-top: 1px solid rgba(11,31,58,.12); }
+.tourCard__price > strong { font-size: 1.25rem; line-height: 1.45; }
+.tourCard--live .tourCard__departuresHeader { display: grid; }
+.tourCard--live .tourCard__nextBadge { max-width: 100%; width: fit-content; text-align: left; }
+.tourCard--live .tourCard__departureRow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tourCard--live .tourCard__departureBooking { grid-column: 1 / -1; grid-template-columns: minmax(0, 1fr) auto; align-items: center; justify-items: start; text-align: left; }
+.tourCard--live .tourCard__subheading { margin-top: 1.25rem; }
+.tourCard--live .tourCard__list { padding-left: 1.25rem; line-height: 1.75; }
+.tourCard--live .tourCard__list li + li { margin-top: .35rem; }
+.tourCard--live .tourCard__day p { white-space: pre-line; line-height: 1.75; }
+.tourCard--live .tourCard__actions { padding-top: 1rem; border-top: 1px solid rgba(11,31,58,.12); }
+@media (max-width: 980px) {
+  .tourCard--live { grid-template-columns: minmax(0, 1fr); }
+  .tourCard--live .tourCard__media { aspect-ratio: 16 / 9; max-height: 360px; }
+}
+@media (max-width: 600px) {
+  .tourCard--live .tourCard__meta, .tourCard--live .tourCard__departureRow, .tourCard--live .tourCard__departureBooking { grid-template-columns: minmax(0, 1fr); }
+  .tourCard--live .tourCard__actions { display: grid; }
+  .tourCard--live .tourCard__departureBooking .btn { width: 100%; }
+}

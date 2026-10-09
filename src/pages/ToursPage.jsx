@@ -10,12 +10,12 @@ export default function ToursPage() {
     <>
       <SEO
         title="Tours & Travel Packages"
-        description="Browse current Jonhrega tour packages, prices, inclusions, and Sedifex-managed departure dates."
+        description="Browse Jonhrega tour packages, compare prices and inclusions, and choose your next departure."
         path="/tours"
       />
       <PageHeader
         title="Tours & Travel Packages"
-        subtitle="Explore current packages, compare destinations and tour styles, and book available departures managed through Sedifex."
+        subtitle="Find your next getaway. Compare destinations, see what’s included, and choose a departure that suits you."
       />
       <ToursGrid />
       <WhyChooseUs />
