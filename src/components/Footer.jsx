@@ -15,7 +15,7 @@ export default function Footer() {
             {company.licensedNote} • {company.licenseNumberPlaceholder}
           </div>
           <div className="footer__tiny">© {year} {company.name}. All rights reserved.</div>
-          <div className="footer__powered">Powered by Sedifex</div>
+          <div className="footer__powered">Built by Sedifex</div>
 
           <div className="footer__affiliation" aria-label="JATA affiliate membership">
             <img

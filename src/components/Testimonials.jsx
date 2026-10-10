@@ -1,7 +1,9 @@
-﻿import Container from "./Container";
+import Container from "./Container";
 import { testimonials } from "../data/testimonials";
 
 export default function Testimonials() {
+  if (testimonials.length === 0) return null;
+
   return (
     <section className="section">
       <Container>
@@ -19,9 +21,7 @@ export default function Testimonials() {
           ))}
         </div>
 
-        <div className="tiny" style={{ marginTop: ".8rem" }}>
-          (Replace these with real client reviews anytime.)
-        </div>
+
       </Container>
     </section>
   );

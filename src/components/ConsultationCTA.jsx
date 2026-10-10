@@ -8,9 +8,9 @@ export default function ConsultationCTA({ eyebrow = "Let’s plan your next move
         <div className="ctaPanel">
           <div>
             <div className="ctaPanel__eyebrow">{eyebrow}</div>
-            <h2 className="ctaPanel__title">Book a consultation appointment now.</h2>
+            <h2 className="ctaPanel__title">Plan your trip with Jonhrega</h2>
             <p className="ctaPanel__text">
-              Choose a live Sedifex service, reserve your preferred time, and continue to secure checkout when payment is required.
+              Tell us your destination and travel dates. Our team will help you choose a tour or arrange a trip around your plans.
             </p>
           </div>
           <div className="ctaPanel__actions">

@@ -457,7 +457,7 @@ export default function BookingForm() {
 
             <p className="tiny">
               {isTourPackage
-                ? "Your tour request is saved first. A selected Sedifex departure stays linked to the booking; online payment is confirmed only after secure checkout verification."
+                ? "Your tour request includes your selected departure. Payment is confirmed after secure checkout verification."
                 : "Your appointment request is saved first. Online payment is confirmed only after secure checkout verification."}
             </p>
           </form>
