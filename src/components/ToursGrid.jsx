@@ -11,6 +11,31 @@ import {
   formatDepartureRange
 } from "../utils/sedifexTours";
 
+// Sedifex authors may paste lists as one string; render text without raw HTML.
+function tourTextItems(value) {
+  return cleanServiceText(value)
+    .split(/(?:\s*[*•]\s*|\n+)/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function TourDescription({ value }) {
+  const text = cleanServiceText(value);
+  const items = tourTextItems(value);
+  if (/[*•]/.test(text) && items.length > 1) {
+    const hasIntroduction = !/^[*•]/.test(text);
+    return (
+      <div className="tourCard__summary">
+        {hasIntroduction ? <p>{items[0]}</p> : null}
+        <ul className="tourCard__list">
+          {(hasIntroduction ? items.slice(1) : items).map((item, index) => <li key={index}>{item}</li>)}
+        </ul>
+      </div>
+    );
+  }
+  return <p className="tourCard__summary">{serviceSummary(value, 220)}</p>;
+}
+
 function getDurationLabel(days) {
   const value = Number(days);
   if (!Number.isFinite(value) || value <= 0) return "Duration TBA";
@@ -234,11 +259,10 @@ export default function ToursGrid() {
             {filteredTours.map((tour) => {
               const tourDepartures = departuresForTour(departures, tour.id);
               const nextDeparture = tourDepartures[0] || null;
-              const inclusions = Array.isArray(tour?.tour?.inclusions) ? tour.tour.inclusions : [];
-              const exclusions = Array.isArray(tour?.tour?.exclusions) ? tour.tour.exclusions : [];
+              const inclusions = Array.isArray(tour?.tour?.inclusions) ? tour.tour.inclusions.flatMap(tourTextItems) : [];
+              const exclusions = Array.isArray(tour?.tour?.exclusions) ? tour.tour.exclusions.flatMap(tourTextItems) : [];
               const itinerary = Array.isArray(tour?.tour?.itinerary) ? tour.tour.itinerary : [];
-              const summary =
-                serviceSummary(tour?.tour?.shortSummary || tour.description || "", 220);
+              const description = tour?.tour?.shortSummary || tour.description || "";
               const route = routeLabel(tour);
 
               return (
@@ -264,7 +288,7 @@ export default function ToursGrid() {
                     </div>
                     <h2 className="tourCard__title">{tour.name}</h2>
 
-                    <p className="tourCard__summary">{summary}</p>
+                    <TourDescription value={description} />
 
                     <div className="tourCard__meta">
                       <div><span>Duration</span><strong>{formatDuration(tour)}</strong></div>
