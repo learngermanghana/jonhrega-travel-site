@@ -81,8 +81,8 @@ function populatedArray(primary, fallback) {
 // the description of a single Day 1 entry. Split only when at least two explicit
 // day headings are found; leave properly structured itineraries untouched.
 function splitLegacyItineraryDay(entry) {
-  const lines = entry.description.replace(/\\r\\n?/g, "\\n").split("\\n");
-  const heading = /^\\s*\\*{0,2}\\s*day\\s+(\\d{1,2})(?:\\s*[-–—:.]\\s*(.*))?\\s*$/i;
+  const lines = entry.description.replace(/\r\n?/g, "\n").split("\n");
+  const heading = /^\s*\*{0,2}\s*day\s+(\d{1,2})(?:\s*[-–—:.]\s*(.*))?\s*$/i;
   const markers = [];
   lines.forEach((line, index) => {
     const match = line.match(heading);
@@ -92,8 +92,8 @@ function splitLegacyItineraryDay(entry) {
   });
   if (markers.length < 2 || new Set(markers.map((marker) => marker.day)).size < 2) return [entry];
 
-  const overview = lines.slice(0, markers[0].index).join("\\n")
-    .replace(/(?:^|\\n)day[-– ]by[-– ]day itinerary\\s*$/i, "").trim();
+  const overview = lines.slice(0, markers[0].index).join("\n")
+    .replace(/(?:^|\n)day[-– ]by[-– ]day itinerary\s*$/i, "").trim();
 
   return markers.map((marker, index) => {
     const section = lines.slice(marker.index + 1, markers[index + 1]?.index ?? lines.length);
@@ -103,7 +103,7 @@ function splitLegacyItineraryDay(entry) {
     return {
       day: marker.day,
       title,
-      description: details.join("\\n").trim(),
+      description: details.join("\n").trim(),
       ...(index === 0 && overview ? { overview } : {})
     };
   });
