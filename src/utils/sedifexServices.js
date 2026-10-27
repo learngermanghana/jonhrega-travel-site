@@ -1,4 +1,4 @@
-const CATALOG_CACHE_KEY = "jonhrega:sedifex-catalog:v3";
+const CATALOG_CACHE_KEY = "jonhrega:sedifex-catalog:v4";
 const CATALOG_CACHE_TTL_MS = 15 * 60 * 1000;
 
 let inFlightCatalogRequest = null;
