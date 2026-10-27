@@ -82,12 +82,17 @@ function populatedArray(primary, fallback) {
 // day headings are found; leave properly structured itineraries untouched.
 function splitLegacyItineraryDay(entry) {
   const lines = entry.description.replace(/\r\n?/g, "\n").split("\n");
-  const heading = /^\s*\*{0,2}\s*day\s+(\d{1,2})(?:\s*[-–—:.]\s*(.*))?\s*$/i;
+  const heading = /^\s*\*{0,2}\s*day\.?\s*(\d{1,2})(?:\s*([-–—:.|~])\s*(.*))?\s*$/i;
   const markers = [];
   lines.forEach((line, index) => {
     const match = line.match(heading);
     if (match && Number(match[1]) >= 1 && Number(match[1]) <= 31) {
-      markers.push({ index, day: Number(match[1]), title: (match[2] || "").trim().replace(/:$/, "") });
+      const rawTitle = (match[3] || "").trim();
+      // Pipe-style schedules contain the day's first activity on the same line.
+      const embeddedActivity = match[2] === "|" && rawTitle.includes(":")
+        ? rawTitle.slice(rawTitle.indexOf(":") + 1).trim() : "";
+      const title = embeddedActivity ? rawTitle.slice(0, rawTitle.indexOf(":")).trim() : rawTitle.replace(/:$/, "");
+      markers.push({ index, day: Number(match[1]), title, embeddedActivity });
     }
   });
   if (markers.length < 2 || new Set(markers.map((marker) => marker.day)).size < 2) return [entry];
@@ -99,7 +104,9 @@ function splitLegacyItineraryDay(entry) {
     const section = lines.slice(marker.index + 1, markers[index + 1]?.index ?? lines.length);
     const firstContentLine = section.findIndex((line) => line.trim());
     const title = marker.title || (firstContentLine >= 0 ? section[firstContentLine].trim() : "") || (marker.day === entry.day ? entry.title : "");
-    const details = marker.title ? section : section.slice(firstContentLine + 1);
+    const details = marker.title
+      ? [...(marker.embeddedActivity ? [marker.embeddedActivity] : []), ...section]
+      : section.slice(firstContentLine + 1);
     return {
       day: marker.day,
       title,
