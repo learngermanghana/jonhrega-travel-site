@@ -97,3 +97,39 @@ test("inline DAY 2 - title headings are supported without discarding programme l
   assert.equal(days[1].title, "TOKYO HIGHLIGHTS");
   assert.equal(days[1].description, "Visit Tokyo Big Sight.");
 });
+
+
+test("Japan package uses DAY 5 ~ and DAY. 6 with all six days", () => {
+  const packed = [
+    "DAY 1- TOKYO ARRIVAL:", "Airport transfer.",
+    "DAY 2 - TOKYO", "Boat cruise.",
+    "DAY 3- HAKONE", "Lake Ashi.",
+    "DAY 4 - KYOTO", "Bullet train.",
+    "DAY 5 ~ YOKOHAMA EXPLORATION", "Cable car.",
+    "DAY. 6 - Hotel Transfer to Airport"
+  ].join("\n");
+  const days = normalizeItinerary([{ day: 1, title: "Tokyo", description: packed }]);
+  assert.deepEqual(days.map((day) => day.day), [1, 2, 3, 4, 5, 6]);
+  assert.equal(days[4].title, "YOKOHAMA EXPLORATION");
+  assert.match(days[5].title, /Hotel Transfer to Airport/);
+});
+
+test("Dubai pipe-style Day N headings keep the activities", () => {
+  const packed = Array.from({ length: 7 }, (_, i) => (
+    "Day " + (i + 1) + " | " + (i === 6 ? "Departure" : "Tour") + ": Full activity for day " + (i + 1) + "."
+  )).join("\n");
+  const days = normalizeItinerary([{ day: 1, title: "Dubai", description: packed }]);
+  assert.equal(days.length, 7);
+  assert.equal(days[0].title, "Tour");
+  assert.equal(days[6].title, "Departure");
+  assert.equal(days[6].description, "Full activity for day 7.");
+});
+
+test("Ghana tour extracts DAY. 7 between Days 6 and 8", () => {
+  const packed = Array.from({ length: 8 }, (_, i) =>
+    "DAY" + (i === 6 ? "." : "") + " " + (i + 1) + " - Tour " + (i + 1) + "\nActivity " + (i + 1)
+  ).join("\n");
+  const days = normalizeItinerary([{ day: 1, title: "Accra", description: packed }]);
+  assert.deepEqual(days.map((day) => day.day), [1, 2, 3, 4, 5, 6, 7, 8]);
+  assert.equal(days[6].description, "Activity 7");
+});
