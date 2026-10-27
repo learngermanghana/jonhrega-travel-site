@@ -384,6 +384,9 @@ export default function ToursGrid() {
                         {itinerary.length > 0 ? (
                           <div className="tourCard__itinerary">
                             <h4>Itinerary</h4>
+                            {itinerary.find((day) => day.overview)?.overview ? (
+                              <p className="tourCard__itineraryOverview">{cleanServiceText(itinerary.find((day) => day.overview).overview)}</p>
+                            ) : null}
                             {itinerary.map((day, index) => (
                               <div className="tourCard__day" key={`${tour.id}-day-${day.day}-${index}`}>
                                 <strong>Day {day.day}{day.title ? ` · ${cleanServiceText(day.title)}` : ""}</strong>
