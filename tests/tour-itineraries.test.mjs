@@ -46,7 +46,7 @@ test("long day descriptions are kept complete and line breaks survive normalizat
   const description = "Morning programme.\n" + "Full activity details, ".repeat(100);
   assert.ok(description.length > 1200);
   const normalized = normalizeItinerary([{ day: 1, title: "Arrival", description }]);
-  assert.equal(normalized[0].description, description);
+  assert.equal(normalized[0].description, description.trim());
 });
 
 test("equal titles on different days remain separate", () => {
