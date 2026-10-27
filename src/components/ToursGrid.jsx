@@ -261,7 +261,9 @@ export default function ToursGrid() {
               const nextDeparture = tourDepartures[0] || null;
               const inclusions = Array.isArray(tour?.tour?.inclusions) ? tour.tour.inclusions.flatMap(tourTextItems) : [];
               const exclusions = Array.isArray(tour?.tour?.exclusions) ? tour.tour.exclusions.flatMap(tourTextItems) : [];
-              const itinerary = Array.isArray(tour?.tour?.itinerary) ? tour.tour.itinerary : [];
+              const itinerary = Array.isArray(tour?.tour?.itinerary)
+                ? [...tour.tour.itinerary].sort((a, b) => Number(a.day) - Number(b.day))
+                : [];
               const description = tour?.tour?.shortSummary || tour.description || "";
               const route = routeLabel(tour);
 
@@ -382,8 +384,8 @@ export default function ToursGrid() {
                         {itinerary.length > 0 ? (
                           <div className="tourCard__itinerary">
                             <h4>Itinerary</h4>
-                            {itinerary.map((day) => (
-                              <div className="tourCard__day" key={`${day.day}-${cleanServiceText(day.title)}`}>
+                            {itinerary.map((day, index) => (
+                              <div className="tourCard__day" key={`${tour.id}-day-${day.day}-${index}`}>
                                 <strong>Day {day.day}{day.title ? ` · ${cleanServiceText(day.title)}` : ""}</strong>
                                 {day.description ? <p>{cleanServiceText(day.description)}</p> : null}
                               </div>
