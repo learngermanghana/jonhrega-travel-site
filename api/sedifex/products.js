@@ -73,15 +73,20 @@ function cleanStringArray(value) {
     .filter(Boolean);
 }
 
+function populatedArray(primary, fallback) {
+  return Array.isArray(primary) && primary.length > 0 ? primary : fallback;
+}
+
 function normalizeItinerary(value) {
   if (!Array.isArray(value)) return [];
   return value
     .map((entry, index) => ({
-      day: Math.max(1, Number(entry?.day) || index + 1),
+      day: Math.max(1, Math.floor(Number(entry?.day) || index + 1)),
       title: String(entry?.title || "").trim(),
       description: String(entry?.description || "").trim()
     }))
-    .filter((entry) => entry.title || entry.description);
+    .filter((entry) => entry.title || entry.description)
+    .sort((a, b) => a.day - b.day);
 }
 
 function getImageCandidate(value) {
@@ -167,9 +172,9 @@ function normalizeService(item) {
           startingCity: rawTour.startingCity || item.startingCity || null,
           endingCity: rawTour.endingCity || item.endingCity || null,
           shortSummary: rawTour.shortSummary || item.shortSummary || null,
-          itinerary: normalizeItinerary(rawTour.itinerary || item.itinerary),
-          inclusions: cleanStringArray(rawTour.inclusions || item.inclusions),
-          exclusions: cleanStringArray(rawTour.exclusions || item.exclusions),
+          itinerary: normalizeItinerary(populatedArray(rawTour.itinerary, item.itinerary)),
+          inclusions: cleanStringArray(populatedArray(rawTour.inclusions, item.inclusions)),
+          exclusions: cleanStringArray(populatedArray(rawTour.exclusions, item.exclusions)),
           capacity: Number(rawTour.capacity ?? item.capacity) || null,
           allowDepositPayment: rawTour.allowDepositPayment === true || item.allowDepositPayment === true,
           depositAmount: Number(rawTour.depositAmount ?? item.depositAmount) || null
@@ -204,6 +209,8 @@ function collectCatalog(data) {
     tours: normalized.filter((item) => item.isTourPackage)
   };
 }
+
+export { normalizeItinerary, normalizeService, collectCatalog };
 
 export default async function handler(req, res) {
   if (req.method !== "GET") {
