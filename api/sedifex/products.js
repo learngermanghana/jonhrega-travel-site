@@ -77,6 +77,38 @@ function populatedArray(primary, fallback) {
   return Array.isArray(primary) && primary.length > 0 ? primary : fallback;
 }
 
+// Some older Sedifex packages have their full day-by-day programme pasted into
+// the description of a single Day 1 entry. Split only when at least two explicit
+// day headings are found; leave properly structured itineraries untouched.
+function splitLegacyItineraryDay(entry) {
+  const lines = entry.description.replace(/\\r\\n?/g, "\\n").split("\\n");
+  const heading = /^\\s*\\*{0,2}\\s*day\\s+(\\d{1,2})(?:\\s*[-–—:.]\\s*(.*))?\\s*$/i;
+  const markers = [];
+  lines.forEach((line, index) => {
+    const match = line.match(heading);
+    if (match && Number(match[1]) >= 1 && Number(match[1]) <= 31) {
+      markers.push({ index, day: Number(match[1]), title: (match[2] || "").trim().replace(/:$/, "") });
+    }
+  });
+  if (markers.length < 2 || new Set(markers.map((marker) => marker.day)).size < 2) return [entry];
+
+  const overview = lines.slice(0, markers[0].index).join("\\n")
+    .replace(/(?:^|\\n)day[-– ]by[-– ]day itinerary\\s*$/i, "").trim();
+
+  return markers.map((marker, index) => {
+    const section = lines.slice(marker.index + 1, markers[index + 1]?.index ?? lines.length);
+    const firstContentLine = section.findIndex((line) => line.trim());
+    const title = marker.title || (firstContentLine >= 0 ? section[firstContentLine].trim() : "") || (marker.day === entry.day ? entry.title : "");
+    const details = marker.title ? section : section.slice(firstContentLine + 1);
+    return {
+      day: marker.day,
+      title,
+      description: details.join("\\n").trim(),
+      ...(index === 0 && overview ? { overview } : {})
+    };
+  });
+}
+
 function normalizeItinerary(value) {
   if (!Array.isArray(value)) return [];
   return value
@@ -86,6 +118,7 @@ function normalizeItinerary(value) {
       description: String(entry?.description || "").trim()
     }))
     .filter((entry) => entry.title || entry.description)
+    .flatMap(splitLegacyItineraryDay)
     .sort((a, b) => a.day - b.day);
 }
 
