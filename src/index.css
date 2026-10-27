@@ -1325,6 +1325,15 @@ input:focus, select:focus, textarea:focus{
   margin-bottom: .85rem;
 }
 
+.tourCard__itineraryOverview{
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+  color: rgba(11,31,58,.78);
+  font-size: .9rem;
+  margin: .2rem 0 .7rem;
+}
+
 .tourCard__itinerary h4,
 .tourCard__details h4{
   margin: .1rem 0 .35rem;

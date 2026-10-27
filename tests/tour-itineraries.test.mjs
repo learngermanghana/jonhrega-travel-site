@@ -56,3 +56,44 @@ test("equal titles on different days remain separate", () => {
   ]);
   assert.deepEqual(normalized.map((day) => day.description), ["First day", "Second day"]);
 });
+
+
+test("legacy seven-day itinerary pasted into Day 1 is expanded without losing activities", () => {
+  const programme = [
+    "Day 1\nParis - Versailles - Paris\nVisit the palace.",
+    "Day 2\nParis\nEnjoy the Seine.",
+    "Day 3\nParis - Reims - Luxembourg\nExplore the old city.",
+    "Day 4\nLuxembourg - Trier - Frankfurt\nVisit Trier.",
+    "Day 5\nFrankfurt - Bonn - Cologne - Amsterdam\nVisit Bonn and Cologne cathedral.",
+    "Day 6\nAmsterdam - Zaanse Schans - Amsterdam\nVisit windmills.",
+    "Day 7\nAmsterdam - Brussels - Paris\nExplore Grand Place."
+  ].join("\n\n");
+  const original = "Hotels\nParis: 2 nights\nDay-by-Day Itinerary\n" + programme;
+  const tour = normalizeService({
+    id: "legacy-europe",
+    name: "Europe tour",
+    itemType: "service",
+    serviceKind: "tour_package",
+    tour: { itinerary: [{ day: 1, title: "France", description: original }] }
+  });
+  assert.equal(tour.tour.itinerary.length, 7);
+  assert.deepEqual(tour.tour.itinerary.map((day) => day.day), [1, 2, 3, 4, 5, 6, 7]);
+  assert.match(tour.tour.itinerary[0].overview, /Paris: 2 nights/);
+  assert.match(tour.tour.itinerary[4].title, /Frankfurt - Bonn - Cologne - Amsterdam/);
+  assert.match(tour.tour.itinerary[4].description, /Cologne cathedral/);
+  assert.match(tour.tour.itinerary[5].description, /windmills/);
+  assert.match(tour.tour.itinerary[6].description, /Grand Place/);
+});
+
+test("inline DAY 2 - title headings are supported without discarding programme lines", () => {
+  const days = normalizeItinerary([{
+    day: 1,
+    title: "Arrival",
+    description: "DAY 1- TOKYO ARRIVAL:\nTransfer to hotel.\n\nDAY 2 - TOKYO HIGHLIGHTS:\nVisit Tokyo Big Sight."
+  }]);
+  assert.deepEqual(days.map((day) => day.day), [1, 2]);
+  assert.equal(days[0].title, "TOKYO ARRIVAL");
+  assert.equal(days[0].description, "Transfer to hotel.");
+  assert.equal(days[1].title, "TOKYO HIGHLIGHTS");
+  assert.equal(days[1].description, "Visit Tokyo Big Sight.");
+});
